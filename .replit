@@ -1,0 +1,27 @@
+modules = ["swift"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "PhotoMigrator"
+
+[[workflows.workflow]]
+name = "PhotoMigrator"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "swift PhotoMigrator.swift"
+
+[deployment]
+run = ["sh", "-c", "swift PhotoMigrator.swift"]
