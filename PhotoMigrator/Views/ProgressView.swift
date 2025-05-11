@@ -1,204 +1,118 @@
 import SwiftUI
 
+/// View that displays overall migration progress
 struct ProgressView: View {
     @ObservedObject var progress: MigrationProgress
-    
-    // Timer for updating elapsed time
-    @State private var timer: Timer?
-    @State private var startTime = Date()
+    let onCancel: () -> Void
     
     var body: some View {
-        VStack(spacing: 30) {
-            Text("Migrating Your Photos")
-                .font(.title)
-            
+        VStack(spacing: 20) {
             // Stage indicator
-            Text(progress.currentStage.rawValue)
-                .font(.headline)
-                .foregroundColor(.blue)
-            
-            // Progress bar
-            ProgressBar(value: progress.overallProgress)
-                .frame(height: 20)
-                .padding(.horizontal)
-            
-            // Stats
-            VStack(spacing: 10) {
-                HStack {
-                    Text("Processing:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    if progress.totalBatches > 1 {
-                        Text("Batch \(progress.currentBatch) of \(progress.totalBatches): \(progress.processedItems) of \(progress.totalItems) items")
-                            .bold()
-                    } else {
-                        Text("\(progress.processedItems) of \(progress.totalItems) items")
-                            .bold()
-                    }
-                }
-                
-                HStack {
-                    Text("Photos:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("\(progress.photosProcessed)")
-                        .bold()
-                }
-                
-                HStack {
-                    Text("Videos:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("\(progress.videosProcessed)")
-                        .bold()
-                }
-                
-                HStack {
-                    Text("Live Photos:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("\(progress.livePhotosReconstructed)")
-                        .bold()
-                }
-                
-                HStack {
-                    Text("Albums:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("\(progress.albumsCreated)")
-                        .bold()
-                }
-                
-                HStack {
-                    Text("Failed items:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text("\(progress.failedItems)")
-                        .bold()
-                        .foregroundColor(progress.failedItems > 0 ? .red : .primary)
-                }
-                
-                Divider()
-                
-                HStack {
-                    Text("Current file:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(progress.currentItemName)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
-                
-                if progress.totalBatches > 1 && progress.batchSize > 0 {
-                    HStack {
-                        Text("Batch size:")
-                        .foregroundColor(.secondary)
-                        Spacer()
-                        Text("\(progress.batchSize) items")
-                            .monospacedDigit()
-                    }
-                    
-                    if progress.peakMemoryUsage > 0 {
-                        HStack {
-                            Text("Memory usage:")
-                            .foregroundColor(.secondary)
-                            Spacer()
-                            Text(formatMemorySize(progress.peakMemoryUsage))
-                                .monospacedDigit()
-                                .foregroundColor(progress.isMemoryWarningActive ? .orange : .primary)
-                        }
-                    }
-                }
-                
-                HStack {
-                    Text("Elapsed time:")
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(formattedElapsedTime)
-                        .monospacedDigit()
-                }
-                
-                if let timeRemaining = progress.estimatedTimeRemaining {
-                    HStack {
-                        Text("Estimated time remaining:")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(formatTimeInterval(timeRemaining))
-                            .monospacedDigit()
-                    }
-                }
+            HStack {
+                Text(getStageName(progress.currentStage))
+                    .font(.headline)
+                Spacer()
+                Text(getStageDescription(progress.currentStage))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
-            .padding(.horizontal)
             
-            // Recent messages/logs
-            if !progress.recentMessages.isEmpty {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Recent Messages:")
-                        .font(.headline)
-                        .padding(.bottom, 4)
-                    
-                    ScrollView {
-                        ForEach(progress.recentMessages, id: \.timestamp) { message in
+            // Main progress bar
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Overall Progress")
+                    Spacer()
+                    Text("\(Int(progress.overallProgress))%")
+                }
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Rectangle()
+                            .foregroundColor(Color.gray.opacity(0.3))
+                            .frame(width: geometry.size.width, height: 12)
+                            .cornerRadius(6)
+                        
+                        Rectangle()
+                            .foregroundColor(.blue)
+                            .frame(width: max(0, geometry.size.width * CGFloat(progress.overallProgress / 100.0)), height: 12)
+                            .cornerRadius(6)
+                    }
+                }
+                .frame(height: 12)
+            }
+            
+            // Current stage progress bar
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Current Stage")
+                    Spacer()
+                    Text("\(Int(progress.stageProgress))%")
+                }
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Rectangle()
+                            .foregroundColor(Color.gray.opacity(0.3))
+                            .frame(width: geometry.size.width, height: 8)
+                            .cornerRadius(4)
+                        
+                        Rectangle()
+                            .foregroundColor(.green)
+                            .frame(width: max(0, geometry.size.width * CGFloat(progress.stageProgress / 100.0)), height: 8)
+                            .cornerRadius(4)
+                    }
+                }
+                .frame(height: 8)
+            }
+            
+            // Show batch progress view if batch processing is active
+            if progress.totalBatches > 0 {
+                BatchProgressView(progress: progress)
+            }
+            
+            // Recent messages
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Status")
+                    .font(.headline)
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(progress.recentMessages.suffix(5).reversed()) { message in
                             HStack(alignment: .top) {
-                                Image(systemName: messageIcon(for: message.type))
-                                    .foregroundColor(messageColor(for: message.type))
+                                Image(systemName: getIconForMessage(message))
+                                    .foregroundColor(getColorForMessage(message))
                                 
-                                Text(message.text)
-                                    .foregroundColor(messageColor(for: message.type))
-                                    .font(.system(.body, design: .monospaced))
-                                    .lineLimit(2)
+                                Text(message.message)
+                                    .font(.subheadline)
+                                    .foregroundColor(getColorForMessage(message))
+                                    .fixedSize(horizontal: false, vertical: true)
                                 
                                 Spacer()
                             }
-                            .padding(.vertical, 4)
                         }
                     }
-                    .frame(maxHeight: 100)
                 }
+                .frame(height: 120)
                 .padding()
                 .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
-                .padding(.horizontal)
+                .cornerRadius(8)
             }
+            
+            // Cancel button
+            Button(action: onCancel) {
+                Text("Cancel")
+                    .foregroundColor(.red)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(8)
+            }
+            .padding(.top, 10)
         }
         .padding()
-        .onAppear {
-            startTime = Date()
-            startTimer()
-        }
-        .onDisappear {
-            stopTimer()
-        }
     }
     
-    private var formattedElapsedTime: String {
-        return formatTimeInterval(progress.elapsedTime)
-    }
-    
-    private func formatTimeInterval(_ interval: TimeInterval) -> String {
-        let hours = Int(interval) / 3600
-        let minutes = Int(interval) / 60 % 60
-        let seconds = Int(interval) % 60
-        
-        if hours > 0 {
-            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            return String(format: "%d:%02d", minutes, seconds)
-        }
-    }
-    
-    private func formatMemorySize(_ bytes: UInt64) -> String {
-        let formatter = ByteCountFormatter()
-        formatter.allowedUnits = [.useAll]
-        formatter.countStyle = .memory
-        return formatter.string(fromByteCount: Int64(bytes))
-    }
-    
-    private func messageIcon(for type: MigrationProgress.ProgressMessage.MessageType) -> String {
-        switch type {
+    // Get icon for message based on type
+    private func getIconForMessage(_ message: MigrationProgress.ProgressMessage) -> String {
+        switch message.type {
         case .info:
             return "info.circle"
         case .warning:
@@ -208,10 +122,11 @@ struct ProgressView: View {
         }
     }
     
-    private func messageColor(for type: MigrationProgress.ProgressMessage.MessageType) -> Color {
-        switch type {
+    // Get color for message based on type
+    private func getColorForMessage(_ message: MigrationProgress.ProgressMessage) -> Color {
+        switch message.type {
         case .info:
-            return .blue
+            return .primary
         case .warning:
             return .orange
         case .error:
@@ -219,41 +134,47 @@ struct ProgressView: View {
         }
     }
     
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            progress.elapsedTime = Date().timeIntervalSince(startTime)
-            
-            // Calculate estimated time remaining if we have processed items
-            if progress.processedItems > 0 && progress.totalItems > 0 {
-                let itemsRemaining = progress.totalItems - progress.processedItems
-                let avgTimePerItem = progress.elapsedTime / Double(progress.processedItems)
-                progress.estimatedTimeRemaining = avgTimePerItem * Double(itemsRemaining)
-            }
+    // Get the name of the current stage
+    private func getStageName(_ stage: MigrationProgress.Stage) -> String {
+        switch stage {
+        case .notStarted:
+            return "Ready"
+        case .initializing:
+            return "Initializing"
+        case .extractingArchive:
+            return "Extracting Archive"
+        case .processingMetadata:
+            return "Processing Metadata"
+        case .importingPhotos:
+            return "Importing Photos"
+        case .organizingAlbums:
+            return "Organizing Albums"
+        case .complete:
+            return "Complete"
+        case .error:
+            return "Error"
         }
     }
     
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-}
-
-struct ProgressBar: View {
-    var value: Double
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Rectangle()
-                    .foregroundColor(Color.gray.opacity(0.3))
-                    .cornerRadius(5)
-                
-                Rectangle()
-                    .foregroundColor(.blue)
-                    .cornerRadius(5)
-                    .frame(width: min(CGFloat(self.value) * geometry.size.width, geometry.size.width))
-                    .animation(.linear, value: value)
-            }
+    // Get description of the current stage
+    private func getStageDescription(_ stage: MigrationProgress.Stage) -> String {
+        switch stage {
+        case .notStarted:
+            return "Waiting to start"
+        case .initializing:
+            return "Setting up migration"
+        case .extractingArchive:
+            return "Extracting files from archive"
+        case .processingMetadata:
+            return "Reading metadata and preparing files"
+        case .importingPhotos:
+            return "Importing photos to Apple Photos"
+        case .organizingAlbums:
+            return "Creating and organizing albums"
+        case .complete:
+            return "Migration completed"
+        case .error:
+            return "Migration failed"
         }
     }
 }
