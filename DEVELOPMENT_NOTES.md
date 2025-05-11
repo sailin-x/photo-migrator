@@ -116,6 +116,42 @@ The batch processing system is designed to handle very large photo libraries (10
    - Memory usage statistics and warnings
    - Summary statistics showing batch performance
 
+## Statistics and Reporting Implementation
+
+The statistics and reporting system provides comprehensive data about migration results:
+
+1. **Data Collection Architecture**:
+   - Enhanced `MigrationSummary` with detailed statistics models:
+     - `MediaTypeStats`: Tracks distribution of photos, videos, live photos, etc.
+     - `FileFormatStats`: Tracks file format usage (JPEG, HEIC, PNG, etc.)
+     - `MetadataStats`: Tracks metadata preservation rates
+     - `MigrationIssues`: Categorizes and tracks errors encountered
+     - `MigrationTimeline`: Records timestamps for each processing stage
+   - Real-time statistics gathering during processing phases
+   - Classification of issues and warnings into categorized metrics
+
+2. **Reporting System**:
+   - `ReportGenerator` service that creates both human-readable and machine-readable reports
+   - HTML report with modern styling, tables, and visualizations
+   - CSV export for data analysis and integration with other tools
+   - Comprehensive issue logging with timestamps and categories
+   - Performance metrics and processing speed calculations
+
+3. **Visualization Features**:
+   - Interactive charts using SwiftUI Charts framework
+   - Success rate gauge chart
+   - Timeline visualization of processing stages
+   - Distribution charts for media types and file formats
+   - Detailed metadata preservation visualization
+   - Processing performance metrics charts
+
+4. **User Interface Integration**:
+   - TabView-based detailed statistics interface
+   - Quick summary in completion screen with option to view full details
+   - Multi-level exploration of statistics through categorized views
+   - Export capabilities for reports and logs
+   - Sorting and filtering options for large datasets
+
 ## Future Enhancements
 
 1. **Improved Live Photo Handling**:
@@ -135,3 +171,9 @@ The batch processing system is designed to handle very large photo libraries (10
    - Multi-threaded batch processing for even faster imports
    - Database-backed state persistence for resumable migrations
    - Per-album batch optimization
+
+5. **Advanced Analytics**:
+   - Machine learning-based error prediction and prevention
+   - Duplicate detection and resolution suggestions
+   - Image quality analysis and comparison
+   - Migration trend analysis for multiple migrations

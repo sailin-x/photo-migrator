@@ -26,6 +26,12 @@ PhotoMigrator is designed to process Google Takeout archives and import them int
   - Adaptive batch sizing based on system resources
   - Memory usage monitoring to prevent crashes
   - Configurable processing parameters
+- **Detailed Statistics and Reporting**: Comprehensive data on migration results
+  - Interactive charts and visualizations
+  - Detailed breakdown by media types and file formats
+  - Timeline analysis of processing stages
+  - Exportable HTML and CSV reports
+  - Metadata preservation statistics
 - **Error Handling**: Comprehensive error reporting and recovery options
 
 ## System Requirements

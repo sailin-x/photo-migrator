@@ -5,6 +5,7 @@ struct SummaryView: View {
     let onReset: () -> Void
     
     @State private var isShowingLogFile = false
+    @State private var isShowingDetailedStats = false
     
     /// Format memory size to human-readable string
     private func formatMemorySize(_ bytes: UInt64) -> String {
@@ -32,13 +33,7 @@ struct SummaryView: View {
     var body: some View {
         VStack(spacing: 20) {
             Image(systemName: "checkmark.circle")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 60, height: 60)
-                .foregroundColor(.green)
-            
-            Text("Migration Complete")
-                .font(.title)
+                .font(.system(size: 60))
                 .foregroundColor(.green)
             
             Text("Your Google Photos have been migrated to Apple Photos.")
@@ -142,87 +137,126 @@ struct SummaryView: View {
                         Text(formatTime(summary.processingTime))
                             .bold()
                     }
-                }
-            }
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
-            .padding(.horizontal)
-            
-            // Errors section if any
-            if !summary.errors.isEmpty {
-                VStack(alignment: .leading) {
-                    Text("Issues encountered:")
-                        .font(.headline)
                     
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 6) {
-                            ForEach(summary.errors, id: \.self) { error in
-                                Text("• \(error)")
-                                    .font(.caption)
-                                    .foregroundColor(.red)
-                            }
+                    if let successRate = summary.successRate {
+                        HStack {
+                            Text("Success rate:")
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text(String(format: "%.1f%%", successRate))
+                                .bold()
+                                .foregroundColor(successRate > 90 ? .green : (successRate > 70 ? .orange : .red))
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxHeight: 100)
                 }
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
-                .padding(.horizontal)
-            }
-            
-            // View log button
-            if let logPath = summary.logPath {
-                Button("View Detailed Log") {
-                    isShowingLogFile = true
-                    NSWorkspace.shared.open(logPath)
-                }
-                .padding()
-            }
-            
-            // Next steps
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Next Steps:")
-                    .font(.headline)
-                
-                Text("• Open Apple Photos to view your imported media")
-                Text("• Check that albums and metadata were imported correctly")
-                Text("• Any missing items can be found in the detailed log")
             }
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(10)
             .padding(.horizontal)
             
-            Button("Start New Migration") {
-                onReset()
+            // Action buttons
+            HStack(spacing: 20) {
+                Button(action: onReset) {
+                    Text("Start New Migration")
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                
+                Button(action: {
+                    isShowingDetailedStats = true
+                }) {
+                    Label("View Detailed Statistics", systemImage: "chart.bar.doc.horizontal")
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                
+                if let logPath = summary.logPath {
+                    Button(action: {
+                        isShowingLogFile = true
+                    }) {
+                        Text("View Log")
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(Color.gray.opacity(0.2))
+                            .foregroundColor(.primary)
+                            .cornerRadius(8)
+                    }
+                }
             }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(8)
-            .padding(.top)
         }
         .padding()
-        .frame(maxWidth: 500)
+        .frame(maxWidth: 600)
+        .sheet(isPresented: $isShowingLogFile) {
+            if let logPath = summary.logPath {
+                LogViewer(logURL: logPath)
+            }
+        }
+        .sheet(isPresented: $isShowingDetailedStats) {
+            DetailedStatisticsView(summary: summary)
+        }
     }
 }
 
-struct SummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-        SummaryView(
-            summary: MigrationSummary(
-                totalItemsProcessed: 1250,
-                successfulImports: 1200,
-                failedImports: 50,
-                albumsCreated: 15,
-                livePhotosReconstructed: 100,
-                metadataIssues: 25,
-                errors: ["Failed to process some Live Photos", "Some albums could not be created"]
-            ),
-            onReset: {}
-        )
+struct LogViewer: View {
+    let logURL: URL
+    @State private var logContent: String = "Loading log file..."
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Migration Log")
+                    .font(.headline)
+                Spacer()
+                Button("Close") {
+                    NSApp.keyWindow?.endSheet(NSApp.keyWindow?.sheets.first ?? NSWindow())
+                }
+            }
+            .padding()
+            
+            ScrollView {
+                Text(logContent)
+                    .font(.system(.body, design: .monospaced))
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+            HStack {
+                Button(action: {
+                    NSWorkspace.shared.selectFile(logURL.path, inFileViewerRootedAtPath: logURL.deletingLastPathComponent().path)
+                }) {
+                    Text("Show in Finder")
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    let pasteboard = NSPasteboard.general
+                    pasteboard.clearContents()
+                    pasteboard.setString(logContent, forType: .string)
+                }) {
+                    Text("Copy to Clipboard")
+                }
+            }
+            .padding()
+        }
+        .frame(width: 800, height: 600)
+        .onAppear {
+            loadLogFile()
+        }
+    }
+    
+    private func loadLogFile() {
+        do {
+            logContent = try String(contentsOf: logURL, encoding: .utf8)
+        } catch {
+            logContent = "Error loading log file: \(error.localizedDescription)"
+        }
     }
 }

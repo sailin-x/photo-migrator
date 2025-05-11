@@ -202,13 +202,134 @@ class ArchiveProcessor {
         // Clean up memory monitoring
         cleanupMemoryMonitoring()
         
+        // Build detailed migration timeline
+        let timeline = MigrationTimeline(
+            startTime: startTime,
+            endTime: endTime
+        )
+        
+        // Collect detailed media type statistics
+        var mediaTypeStats = MediaTypeStats()
+        var fileFormatStats = FileFormatStats()
+        var metadataStats = MetadataStats()
+        var migrationIssues = MigrationIssues()
+        var albumsWithItems = [String: Int]()
+        
+        // Process media items to collect detailed statistics
+        for item in processedMediaItems {
+            // Media type statistics
+            switch item.fileType {
+            case .photo:
+                mediaTypeStats.photos += 1
+            case .video:
+                mediaTypeStats.videos += 1
+            case .livePhoto:
+                mediaTypeStats.livePhotos += 1
+            case .motionPhoto:
+                mediaTypeStats.motionPhotos += 1
+            case .unknown:
+                mediaTypeStats.otherTypes += 1
+            }
+            
+            // File format statistics (determined from file extension)
+            let fileExtension = item.fileURL.pathExtension.lowercased()
+            switch fileExtension {
+            case "jpg", "jpeg":
+                fileFormatStats.jpeg += 1
+            case "heic":
+                fileFormatStats.heic += 1
+            case "png":
+                fileFormatStats.png += 1
+            case "gif":
+                fileFormatStats.gif += 1
+            case "mp4":
+                fileFormatStats.mp4 += 1
+            case "mov":
+                fileFormatStats.mov += 1
+            default:
+                fileFormatStats.otherFormats += 1
+            }
+            
+            // Metadata statistics
+            if item.latitude != nil && item.longitude != nil {
+                metadataStats.withLocation += 1
+            }
+            
+            if item.title != nil {
+                metadataStats.withTitle += 1
+            }
+            
+            if item.description != nil {
+                metadataStats.withDescription += 1
+            }
+            
+            if item.isFavorite {
+                metadataStats.withFavorite += 1
+            }
+            
+            // Creation date is always preserved
+            metadataStats.withCreationDate += 1
+            
+            // Album statistics
+            for albumName in item.albumNames {
+                albumsWithItems[albumName, default: 0] += 1
+            }
+        }
+        
+        // Collect issue statistics from progress messages
+        for message in progress.recentMessages {
+            switch message.type {
+            case .warning:
+                if message.message.contains("metadata") {
+                    migrationIssues.metadataParsingErrors += 1
+                } else if message.message.contains("file") {
+                    migrationIssues.fileAccessErrors += 1
+                } else if message.message.contains("import") {
+                    migrationIssues.importErrors += 1
+                } else if message.message.contains("album") {
+                    migrationIssues.albumCreationErrors += 1
+                } else if message.message.contains("unsupported") || message.message.contains("format") {
+                    migrationIssues.mediaTypeUnsupported += 1
+                } else if message.message.contains("corrupt") {
+                    migrationIssues.fileCorruptionIssues += 1
+                }
+                
+            case .error:
+                // Track detailed errors with timestamps
+                migrationIssues.detailedErrors.append((timestamp: message.timestamp, message: message.message))
+                
+                if message.message.contains("metadata") {
+                    migrationIssues.metadataParsingErrors += 1
+                } else if message.message.contains("file") {
+                    migrationIssues.fileAccessErrors += 1
+                } else if message.message.contains("import") {
+                    migrationIssues.importErrors += 1
+                } else if message.message.contains("album") {
+                    migrationIssues.albumCreationErrors += 1
+                }
+                
+            default:
+                // Track memory pressure events from info messages
+                if message.message.contains("memory pressure") {
+                    migrationIssues.memoryPressureEvents += 1
+                }
+            }
+        }
+        
+        // Create comprehensive migration summary
         let summary = MigrationSummary(
             totalItemsProcessed: processedMediaItems.count,
             successfulImports: importResults.compactMap { $0.assetId }.count,
             failedImports: importResults.filter { $0.assetId == nil }.count,
             albumsCreated: albumsCreated,
+            albumsWithItems: albumsWithItems,
             livePhotosReconstructed: processedMediaItems.filter { $0.fileType == .livePhoto }.count,
             metadataIssues: progress.recentMessages.filter { $0.type == .warning }.count,
+            mediaTypeStats: mediaTypeStats,
+            fileFormatStats: fileFormatStats,
+            metadataStats: metadataStats,
+            issues: migrationIssues,
+            timeline: timeline,
             logPath: logFileURL,
             batchProcessingUsed: batchProcessingEnabled,
             batchesProcessed: progress.currentBatch,
