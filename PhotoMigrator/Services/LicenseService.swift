@@ -72,10 +72,13 @@ struct MachineInfo: Codable {
 class LicenseService: ObservableObject {
     static let shared = LicenseService()
     
+    // Maximum number of photos allowed in trial mode
+    static let TRIAL_PHOTO_LIMIT = 50
+    
     @Published var hasValidLicense: Bool = false
     @Published var licenseType: String = "none"
     @Published var expirationDate: Date?
-    @Published var daysRemainingInTrial: Int = 0
+    @Published var photosRemainingInTrial: Int = TRIAL_PHOTO_LIMIT
     @Published var remainingActivations: Int = 0
     @Published var canUseApp: Bool = false
     
@@ -123,10 +126,6 @@ class LicenseService: ObservableObject {
                 licenseType = license.type.rawValue
                 expirationDate = license.expiresAt
                 
-                if let expDate = license.expiresAt {
-                    daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: expDate).day ?? 0
-                }
-                
                 remainingActivations = license.maxActivations - license.activationsCount
                 canUseApp = true
             } else {
@@ -134,40 +133,31 @@ class LicenseService: ObservableObject {
                 hasValidLicense = false
                 licenseType = "none"
                 
-                // Check if trial is still valid
-                if let trialExpiry = UserDefaults.standard.object(forKey: "trialExpirationDate") as? Date,
-                   trialExpiry > Date() {
-                    // Trial is still valid
-                    licenseType = "trial"
-                    expirationDate = trialExpiry
-                    daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: trialExpiry).day ?? 0
-                    canUseApp = true
-                } else {
-                    canUseApp = false
-                }
+                // Check if trial is still available
+                loadTrialStatus()
             }
         } else {
             // No license found, check for trial
-            if let trialExpiry = UserDefaults.standard.object(forKey: "trialExpirationDate") as? Date {
-                if trialExpiry > Date() {
-                    // Trial is still valid
-                    hasValidLicense = true
-                    licenseType = "trial"
-                    expirationDate = trialExpiry
-                    daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: trialExpiry).day ?? 0
-                    canUseApp = true
-                } else {
-                    // Trial has expired
-                    hasValidLicense = false
-                    licenseType = "none"
-                    canUseApp = false
-                }
-            } else {
-                // No trial or license
-                hasValidLicense = false
-                licenseType = "none"
-                canUseApp = false
-            }
+            loadTrialStatus()
+        }
+    }
+    
+    private func loadTrialStatus() {
+        // Get photos processed count from UserDefaults
+        let photosProcessed = UserDefaults.standard.integer(forKey: "trialPhotosProcessed")
+        
+        if photosProcessed < Self.TRIAL_PHOTO_LIMIT {
+            // Trial is still available
+            hasValidLicense = true
+            licenseType = "trial"
+            photosRemainingInTrial = Self.TRIAL_PHOTO_LIMIT - photosProcessed
+            canUseApp = true
+        } else {
+            // Trial has been fully used
+            hasValidLicense = false
+            licenseType = "none"
+            photosRemainingInTrial = 0
+            canUseApp = false
         }
     }
     
@@ -216,8 +206,9 @@ class LicenseService: ObservableObject {
     }
     
     func startTrial() async throws {
-        // Check if trial has already been used
-        if UserDefaults.standard.object(forKey: "trialExpirationDate") != nil {
+        // Check if trial has already been fully used
+        let photosProcessed = UserDefaults.standard.integer(forKey: "trialPhotosProcessed")
+        if photosProcessed >= Self.TRIAL_PHOTO_LIMIT {
             throw LicenseError.trialAlreadyUsed
         }
         
@@ -227,17 +218,37 @@ class LicenseService: ObservableObject {
         // Simulate delay for network request
         try await Task.sleep(nanoseconds: 1_000_000_000)
         
-        // Set trial expiration to 14 days from now
-        let trialExpirationDate = Calendar.current.date(byAdding: .day, value: 14, to: Date())!
-        UserDefaults.standard.set(trialExpirationDate, forKey: "trialExpirationDate")
+        // If this is a new trial, initialize the counter
+        if photosProcessed == 0 {
+            UserDefaults.standard.set(0, forKey: "trialPhotosProcessed")
+        }
         
         // Update UI on main thread
         await MainActor.run {
             self.hasValidLicense = true
             self.licenseType = "trial"
-            self.expirationDate = trialExpirationDate
-            self.daysRemainingInTrial = 14
+            self.photosRemainingInTrial = Self.TRIAL_PHOTO_LIMIT - photosProcessed
             self.canUseApp = true
+        }
+    }
+    
+    /// Track a photo processed in trial mode
+    func trackPhotoProcessed() {
+        if licenseType == "trial" {
+            let currentCount = UserDefaults.standard.integer(forKey: "trialPhotosProcessed")
+            let newCount = currentCount + 1
+            UserDefaults.standard.set(newCount, forKey: "trialPhotosProcessed")
+            
+            // Update the remaining count
+            if newCount < Self.TRIAL_PHOTO_LIMIT {
+                photosRemainingInTrial = Self.TRIAL_PHOTO_LIMIT - newCount
+            } else {
+                photosRemainingInTrial = 0
+                // If limit reached, update license status
+                hasValidLicense = false
+                licenseType = "none"
+                canUseApp = false
+            }
         }
     }
     
@@ -266,16 +277,8 @@ class LicenseService: ObservableObject {
             self.expirationDate = nil
             self.remainingActivations = 0
             
-            // Check if trial is still valid
-            if let trialExpiry = UserDefaults.standard.object(forKey: "trialExpirationDate") as? Date,
-               trialExpiry > Date() {
-                self.licenseType = "trial"
-                self.expirationDate = trialExpiry
-                self.daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: trialExpiry).day ?? 0
-                self.canUseApp = true
-            } else {
-                self.canUseApp = false
-            }
+            // Check if trial is still available
+            loadTrialStatus()
         }
     }
     

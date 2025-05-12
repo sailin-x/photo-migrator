@@ -60,7 +60,7 @@ struct ContentView: View {
                                     .fontWeight(.bold)
                                     .foregroundColor(.white)
                                 
-                                Text("\(licenseService.daysRemainingInTrial) days remaining")
+                                Text("\(licenseService.photosRemainingInTrial) of \(LicenseService.TRIAL_PHOTO_LIMIT) photos remaining")
                                     .font(.caption2)
                                     .foregroundColor(.white)
                             }
@@ -108,9 +108,13 @@ struct ContentView: View {
 
 // Placeholder views for main content sections - these would be implemented with full functionality
 struct ImportPhotosView: View {
+    @ObservedObject private var licenseService = LicenseService.shared
     @State private var takeoutArchivePath: String = ""
     @State private var isProcessing = false
     @State private var progress: Float = 0.0
+    @State private var photosProcessed: Int = 0
+    @State private var totalPhotos: Int = 0
+    @State private var showTrialLimitReached = false
     
     var body: some View {
         VStack(spacing: 30) {
@@ -156,7 +160,7 @@ struct ImportPhotosView: View {
                         .progressViewStyle(.linear)
                         .frame(height: 10)
                     
-                    Text("\(Int(progress * 100))% Complete")
+                    Text("\(photosProcessed) of \(totalPhotos) photos migrated (\(Int(progress * 100))% complete)")
                         .foregroundColor(.secondary)
                     
                     Button("Cancel") {
@@ -170,9 +174,40 @@ struct ImportPhotosView: View {
                 .cornerRadius(12)
             }
             
+            // Show trial limit in UI if in trial mode
+            if licenseService.licenseType == "trial" && !isProcessing {
+                HStack(spacing: 10) {
+                    Image(systemName: "info.circle")
+                        .foregroundColor(.orange)
+                    
+                    Text("Trial mode: \(licenseService.photosRemainingInTrial) of \(LicenseService.TRIAL_PHOTO_LIMIT) photos remaining")
+                        .foregroundColor(.secondary)
+                    
+                    Spacer()
+                    
+                    Button("Get License") {
+                        // Show license activation view
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .padding()
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(12)
+            }
+            
             Spacer()
         }
         .padding()
+        .alert(isPresented: $showTrialLimitReached) {
+            Alert(
+                title: Text("Trial Limit Reached"),
+                message: Text("You've reached the limit of \(LicenseService.TRIAL_PHOTO_LIMIT) photos for the trial version. Purchase a license to migrate your entire library."),
+                primaryButton: .default(Text("Purchase License")) {
+                    // Show license activation view
+                },
+                secondaryButton: .cancel(Text("Later"))
+            )
+        }
     }
     
     private func selectTakeoutArchive() {
@@ -188,13 +223,52 @@ struct ImportPhotosView: View {
     }
     
     private func startMigration() {
+        // Check trial status first
+        if licenseService.licenseType == "trial" && licenseService.photosRemainingInTrial <= 0 {
+            showTrialLimitReached = true
+            return
+        }
+        
         isProcessing = true
         progress = 0.0
+        photosProcessed = 0
+        
+        // In a real implementation, we'd parse the archive to get the total photo count
+        // For the demo, we'll just use a random number between 50-200
+        totalPhotos = Int.random(in: 50...200)
+        
+        // If in trial mode, limit the total number of photos to process
+        if licenseService.licenseType == "trial" {
+            totalPhotos = min(totalPhotos, licenseService.photosRemainingInTrial)
+        }
         
         // Simulate a migration process with progress updates
         let timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { timer in
             if progress < 1.0 {
                 progress += 0.01
+                
+                // Update processed photos count based on progress
+                let newProcessedCount = Int(Float(totalPhotos) * progress)
+                let photosDelta = newProcessedCount - photosProcessed
+                
+                // If we processed more photos, update the count and track in trial
+                if photosDelta > 0 {
+                    photosProcessed = newProcessedCount
+                    
+                    // If in trial mode, track the photos processed
+                    if licenseService.licenseType == "trial" {
+                        for _ in 0..<photosDelta {
+                            licenseService.trackPhotoProcessed()
+                        }
+                        
+                        // Check if trial limit was reached during processing
+                        if licenseService.photosRemainingInTrial <= 0 {
+                            timer.invalidate()
+                            isProcessing = false
+                            showTrialLimitReached = true
+                        }
+                    }
+                }
             } else {
                 timer.invalidate()
                 isProcessing = false
