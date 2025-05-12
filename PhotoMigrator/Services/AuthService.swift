@@ -1,301 +1,170 @@
 import Foundation
 import Combine
-import Supabase
 
-/// Service for handling authentication with Supabase
+enum AuthState {
+    case initializing
+    case authenticated
+    case unauthenticated
+    case error(Error)
+}
+
+enum AuthError: Error {
+    case invalidCredentials
+    case emailAlreadyInUse
+    case networkError
+    case serverError
+    case unknown
+    
+    var localizedDescription: String {
+        switch self {
+        case .invalidCredentials:
+            return "Invalid email or password."
+        case .emailAlreadyInUse:
+            return "This email is already in use. Please try signing in instead."
+        case .networkError:
+            return "Network error. Please check your internet connection and try again."
+        case .serverError:
+            return "Server error. Please try again later."
+        case .unknown:
+            return "An unknown error occurred. Please try again."
+        }
+    }
+}
+
 class AuthService: ObservableObject {
-    /// Shared singleton instance
     static let shared = AuthService()
     
-    /// Supabase client
-    private var supabase: SupabaseClient?
-    
-    /// Current authenticated user
+    @Published var authState: AuthState = .initializing
     @Published var currentUser: User?
     
-    /// Authentication state
-    @Published var authState: AuthState = .unknown
+    private let supabaseURL = "https://yourproject.supabase.co"
+    private let supabaseKey = "your-supabase-key"
     
-    /// Current error message, if any
-    @Published var errorMessage: String?
-    
-    /// Subscriptions for Combine
-    private var cancellables = Set<AnyCancellable>()
-    
-    /// Authentication states
-    enum AuthState {
-        case unknown
-        case authenticated
-        case unauthenticated
-        case verifying
-        case registering
-        case loggingIn
-    }
-    
-    /// Private initializer for singleton
     private init() {
-        initializeSupabase()
+        // Check for existing session on init
+        checkExistingSession()
     }
     
-    /// Initialize the Supabase client
-    private func initializeSupabase() {
-        let config = AppConfig.shared
+    private func checkExistingSession() {
+        // In a real implementation, this would check for a stored token
+        // and validate it with Supabase
         
-        guard !config.supabaseURL.isEmpty,
-              !config.supabaseAPIKey.isEmpty else {
-            // No API keys configured yet
+        let hasStoredToken = UserDefaults.standard.string(forKey: "authToken") != nil
+        
+        if hasStoredToken {
+            // Simulate token validation - in a real app, this would be a
+            // network request to validate the token with Supabase
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.authState = .authenticated
+                self.currentUser = User(id: "user123", email: "user@example.com")
+            }
+        } else {
             authState = .unauthenticated
-            return
-        }
-        
-        supabase = SupabaseClient(
-            supabaseURL: URL(string: config.supabaseURL)!,
-            supabaseKey: config.supabaseAPIKey
-        )
-        
-        // Check if user is already authenticated
-        Task {
-            await checkAuthentication()
         }
     }
     
-    /// Check if user is already authenticated
-    func checkAuthentication() async {
-        guard let supabase = supabase else {
-            await MainActor.run {
-                authState = .unauthenticated
-            }
-            return
-        }
+    // MARK: - Authentication Methods
+    
+    func signIn(email: String, password: String) async throws {
+        // Simulate network request to Supabase for authentication
+        // In a real implementation, this would make an API call
         
-        do {
-            let session = try await supabase.auth.session
+        // Simulate delay for network request
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        // Placeholder logic - in a real app we would validate against Supabase
+        if email.contains("@") && password.count >= 6 {
+            let token = UUID().uuidString
+            UserDefaults.standard.set(token, forKey: "authToken")
             
-            // If we have a session, fetch user details
-            if session != nil {
-                await fetchUserDetails()
-            } else {
-                await MainActor.run {
-                    authState = .unauthenticated
-                }
-            }
-        } catch {
+            // Create user object
+            let user = User(id: "user123", email: email)
+            
+            // Update UI on main thread
             await MainActor.run {
-                authState = .unauthenticated
-                errorMessage = "Failed to check authentication status: \(error.localizedDescription)"
+                self.currentUser = user
+                self.authState = .authenticated
             }
+        } else {
+            throw AuthError.invalidCredentials
         }
     }
     
-    /// Fetch user details from Supabase
-    func fetchUserDetails() async {
-        guard let supabase = supabase,
-              let authUser = try? await supabase.auth.user() else {
-            await MainActor.run {
-                authState = .unauthenticated
-            }
-            return
-        }
+    func createAccount(email: String, password: String) async throws {
+        // Simulate network request to Supabase for account creation
+        // In a real implementation, this would make an API call
         
-        do {
-            // Fetch user data from profiles table
-            let response = try await supabase.from("profiles")
-                .select()
-                .eq("id", value: authUser.id)
-                .single()
-                .execute()
+        // Simulate delay for network request
+        try await Task.sleep(nanoseconds: 1_500_000_000)
+        
+        // Placeholder logic - in a real app we would create an account in Supabase
+        if email.contains("@") && password.count >= 6 {
+            // In a real implementation, we'd check if email exists
+            // For demo purposes, just simulate success
             
-            // Parse user data
-            if let data = response.data {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-                decoder.dateDecodingStrategy = .formatted(dateFormatter)
-                
-                let user = try decoder.decode(User.self, from: data)
-                
-                await MainActor.run {
-                    self.currentUser = user
-                    self.authState = .authenticated
-                    self.errorMessage = nil
-                }
-            } else {
-                await MainActor.run {
-                    self.authState = .unauthenticated
-                    self.errorMessage = "User profile not found"
-                }
-            }
-        } catch {
+            // Update UI on main thread
             await MainActor.run {
                 self.authState = .unauthenticated
-                self.errorMessage = "Failed to fetch user details: \(error.localizedDescription)"
             }
-        }
-    }
-    
-    /// Sign in with email and password
-    func signIn(email: String, password: String) async {
-        guard let supabase = supabase else {
-            await MainActor.run {
-                authState = .unauthenticated
-                errorMessage = "Supabase client not initialized"
-            }
-            return
-        }
-        
-        await MainActor.run {
-            authState = .loggingIn
-        }
-        
-        do {
-            let response = try await supabase.auth.signIn(email: email, password: password)
-            
-            if response.user != nil {
-                await fetchUserDetails()
+        } else {
+            if !email.contains("@") {
+                throw AuthError.invalidCredentials
             } else {
-                await MainActor.run {
-                    authState = .unauthenticated
-                    errorMessage = "Sign in failed"
-                }
-            }
-        } catch {
-            await MainActor.run {
-                authState = .unauthenticated
-                errorMessage = "Sign in failed: \(error.localizedDescription)"
+                throw AuthError.unknown
             }
         }
     }
     
-    /// Sign up with email and password
-    func signUp(email: String, password: String, name: String) async {
-        guard let supabase = supabase else {
-            await MainActor.run {
-                authState = .unauthenticated
-                errorMessage = "Supabase client not initialized"
-            }
-            return
-        }
-        
-        await MainActor.run {
-            authState = .registering
-        }
-        
-        do {
-            // Sign up with Supabase Auth
-            let response = try await supabase.auth.signUp(email: email, password: password)
-            
-            if let user = response.user {
-                // Create initial user profile
-                let profileData: [String: Any] = [
-                    "id": user.id,
-                    "email": email,
-                    "name": name,
-                    "created_at": ISO8601DateFormatter().string(from: Date()),
-                    "is_email_verified": false,
-                    "subscription_status": "none",
-                    "account_type": "trial",
-                    "trial_ends_at": ISO8601DateFormatter().string(from: Date().addingTimeInterval(TimeInterval(AppConfig.shared.trialPeriodDays * 24 * 60 * 60)))
-                ]
-                
-                // Insert new profile
-                let _ = try? await supabase.from("profiles")
-                    .insert(values: profileData)
-                    .execute()
-                
-                await MainActor.run {
-                    authState = .verifying
-                    errorMessage = nil
-                }
-            } else {
-                await MainActor.run {
-                    authState = .unauthenticated
-                    errorMessage = "Sign up failed"
-                }
-            }
-        } catch {
-            await MainActor.run {
-                authState = .unauthenticated
-                errorMessage = "Sign up failed: \(error.localizedDescription)"
-            }
-        }
-    }
-    
-    /// Sign out the current user
     func signOut() async {
-        guard let supabase = supabase else {
-            await MainActor.run {
-                authState = .unauthenticated
-            }
-            return
-        }
+        // Simulate network request to sign out
+        // In a real implementation, this would make an API call to invalidate the token
         
-        do {
-            try await supabase.auth.signOut()
-            
-            await MainActor.run {
-                currentUser = nil
-                authState = .unauthenticated
-                errorMessage = nil
-            }
-        } catch {
-            await MainActor.run {
-                errorMessage = "Sign out failed: \(error.localizedDescription)"
-            }
+        // Clear stored token
+        UserDefaults.standard.removeObject(forKey: "authToken")
+        
+        // Update state
+        await MainActor.run {
+            self.currentUser = nil
+            self.authState = .unauthenticated
         }
     }
     
-    /// Reset password for a user
-    func resetPassword(email: String) async {
-        guard let supabase = supabase else {
-            await MainActor.run {
-                errorMessage = "Supabase client not initialized"
-            }
-            return
-        }
+    func resetPassword(email: String) async throws {
+        // Simulate network request to Supabase for password reset
+        // In a real implementation, this would make an API call
         
-        do {
-            try await supabase.auth.resetPasswordForEmail(email)
-            
-            await MainActor.run {
-                errorMessage = nil
-            }
-        } catch {
-            await MainActor.run {
-                errorMessage = "Password reset failed: \(error.localizedDescription)"
-            }
+        // Simulate delay for network request
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        // Placeholder logic - in a real app we would trigger a password reset email via Supabase
+        if email.contains("@") {
+            // Success - no return value needed
+        } else {
+            throw AuthError.invalidCredentials
         }
     }
+}
+
+// User model
+struct User: Codable, Identifiable {
+    let id: String
+    let email: String
+    var firstName: String?
+    var lastName: String?
+    var profileImageURL: URL?
     
-    /// Update user profile information
-    func updateUserProfile(name: String) async {
-        guard let supabase = supabase,
-              let currentUser = currentUser else {
-            await MainActor.run {
-                errorMessage = "Not authenticated"
-            }
-            return
-        }
+    var fullName: String {
+        let first = firstName ?? ""
+        let last = lastName ?? ""
         
-        do {
-            let updateData = ["name": name]
-            
-            let _ = try await supabase.from("profiles")
-                .update(values: updateData)
-                .eq("id", value: currentUser.id)
-                .execute()
-            
-            // Update the local user object
-            await MainActor.run {
-                var updatedUser = currentUser
-                updatedUser.name = name
-                self.currentUser = updatedUser
-                errorMessage = nil
-            }
-        } catch {
-            await MainActor.run {
-                errorMessage = "Failed to update profile: \(error.localizedDescription)"
-            }
+        if first.isEmpty && last.isEmpty {
+            return "User"
+        } else if first.isEmpty {
+            return last
+        } else if last.isEmpty {
+            return first
+        } else {
+            return "\(first) \(last)"
         }
     }
 }

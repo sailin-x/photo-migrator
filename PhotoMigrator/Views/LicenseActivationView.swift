@@ -1,191 +1,354 @@
 import SwiftUI
 
 struct LicenseActivationView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject private var licenseService = LicenseService.shared
     @ObservedObject private var authService = AuthService.shared
     
-    @State private var licenseKey = ""
-    @State private var isShowingLogin = false
+    @State private var activationKey = ""
+    @State private var email = ""
+    @State private var password = ""
+    @State private var confirmPassword = ""
+    @State private var isCreatingAccount = false
+    @State private var showError = false
+    @State private var errorMessage = ""
+    @State private var isActivating = false
+    @State private var showSuccess = false
+    
+    private var isSignedIn: Bool {
+        authService.authState == .authenticated
+    }
     
     var body: some View {
-        VStack(spacing: 25) {
-            // App logo and title
-            VStack {
-                Image(systemName: "photo.on.rectangle.angled")
-                    .font(.system(size: 60))
-                    .foregroundColor(.blue)
-                
-                Text("PhotoMigrator")
+        VStack(spacing: 20) {
+            // Header
+            HStack {
+                Text(isCreatingAccount ? "Create Account" : (isSignedIn ? "License Activation" : "Sign In"))
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
-                Text("Version \(AppConfig.shared.appVersion)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.top, 30)
-            
-            // Current license status
-            VStack(alignment: .center, spacing: 10) {
-                Text("License Status")
-                    .font(.headline)
-                
-                Text(licenseService.licenseStatusMessage)
-                    .foregroundColor(getLicenseStatusColor())
-                    .fontWeight(.medium)
-                
-                if let license = licenseService.currentLicense, 
-                   licenseService.licenseState == .valid || licenseService.licenseState == .trial {
-                    VStack {
-                        if license.type == .subscription,
-                           let timeRemaining = license.formattedTimeRemaining {
-                            Text("Time remaining: \(timeRemaining)")
-                                .font(.caption)
-                        }
-                        
-                        if license.activationsUsed > 0 {
-                            Text("Activations: \(license.activationsUsed)/\(license.maxActivations)")
-                                .font(.caption)
-                        }
-                    }
-                    .foregroundColor(.secondary)
-                    .padding(.top, 5)
-                }
-                
-                // User information if signed in
-                if let user = authService.currentUser {
-                    VStack(spacing: 5) {
-                        Text("Signed in as \(user.email)")
-                            .font(.caption)
-                        
-                        if user.accountType == .trial, 
-                           let trialRemaining = user.formattedTrialTimeRemaining {
-                            Text("Trial ends in \(trialRemaining)")
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                        }
-                    }
-                    .padding(.top, 5)
-                }
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
-            
-            // License activation section
-            VStack(spacing: 15) {
-                Text("Activate License")
-                    .font(.headline)
-                
-                TextField("Enter License Key", text: $licenseKey)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                    .frame(maxWidth: 400)
+                Spacer()
                 
                 Button(action: {
-                    Task {
-                        await licenseService.activateLicense(licenseKey: licenseKey)
-                    }
+                    presentationMode.wrappedValue.dismiss()
                 }) {
-                    if licenseService.isActivating {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .padding(.horizontal, 10)
-                    } else {
-                        Text("Activate")
-                            .fontWeight(.medium)
-                            .padding(.horizontal, 20)
-                    }
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundColor(.gray)
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(licenseKey.count < 5 || licenseService.isActivating)
-                
-                if let errorMessage = licenseService.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .font(.caption)
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal)
-                }
+                .buttonStyle(.plain)
             }
-            .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
+            .padding(.bottom)
             
-            // Authentication options
-            VStack(spacing: 15) {
-                if authService.authState == .unauthenticated {
-                    Button("Sign In or Register") {
-                        isShowingLogin = true
-                    }
-                    .buttonStyle(.borderless)
-                } else if authService.authState == .authenticated {
-                    Button("Sign Out") {
-                        Task {
-                            await authService.signOut()
-                        }
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.secondary)
-                }
-                
-                HStack(spacing: 20) {
-                    Button("Purchase License") {
-                        // Open the purchase website
-                        if let url = URL(string: "https://photomigrator.app/purchase") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.borderless)
-                    
-                    Button("Continue in Trial Mode") {
-                        // Close this view and continue in trial mode
-                        NotificationCenter.default.post(name: Notification.Name("ContinueWithoutLicense"), object: nil)
-                    }
-                    .buttonStyle(.borderless)
-                    .foregroundColor(.orange)
-                }
+            if showSuccess {
+                successView
+            } else if isCreatingAccount {
+                createAccountView
+            } else if isSignedIn {
+                licenseActivationView
+            } else {
+                signInView
             }
             
             Spacer()
             
-            Text("© \(Calendar.current.component(.year, from: Date())) PhotoMigrator. All rights reserved.")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            // Footer
+            VStack {
+                if showError {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(8)
+                }
+                
+                if !isSignedIn && !isCreatingAccount {
+                    Button("Continue Without License") {
+                        NotificationCenter.default.post(name: Notification.Name("ContinueWithoutLicense"), object: nil)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .foregroundColor(.secondary)
+                    .padding(.top)
+                }
+            }
         }
         .padding()
-        .frame(width: 500, height: 600)
-        .sheet(isPresented: $isShowingLogin) {
-            AuthenticationView()
+        .frame(width: 500, height: 550)
+    }
+    
+    // MARK: - Subviews
+    
+    private var signInView: some View {
+        VStack(spacing: 20) {
+            Text("Sign in to your PhotoMigrator account to activate your license or manage your subscription.")
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+            
+            Group {
+                TextField("Email", text: $email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textContentType(.emailAddress)
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                
+                SecureField("Password", text: $password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textContentType(.password)
+            }
+            .padding(.vertical, 5)
+            
+            Button("Sign In") {
+                signIn()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top)
+            
+            Divider().padding(.vertical)
+            
+            Text("Don't have an account?")
+                .foregroundColor(.secondary)
+            
+            Button("Create Account") {
+                isCreatingAccount = true
+            }
+            .buttonStyle(.bordered)
         }
     }
     
-    // Get color based on license status
-    private func getLicenseStatusColor() -> Color {
-        switch licenseService.licenseState {
-        case .valid:
-            return .green
-        case .trial:
-            return .orange
-        case .expired:
-            return .red
-        case .invalid:
-            return .red
-        case .noLicense:
-            if let user = authService.currentUser, user.canUseApp {
-                return .orange // Trial through account
+    private var createAccountView: some View {
+        VStack(spacing: 20) {
+            Text("Create a PhotoMigrator account to manage your licenses and subscriptions.")
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+            
+            Group {
+                TextField("Email", text: $email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textContentType(.emailAddress)
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
+                
+                SecureField("Password", text: $password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textContentType(.newPassword)
+                
+                SecureField("Confirm Password", text: $confirmPassword)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .textContentType(.newPassword)
             }
-            return .red
-        case .notActivated, .unknown:
-            return .secondary
+            .padding(.vertical, 5)
+            
+            Button("Create Account") {
+                createAccount()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top)
+            .disabled(email.isEmpty || password.isEmpty || password != confirmPassword)
+            
+            Divider().padding(.vertical)
+            
+            Text("Already have an account?")
+                .foregroundColor(.secondary)
+            
+            Button("Sign In") {
+                isCreatingAccount = false
+                email = ""
+                password = ""
+                confirmPassword = ""
+            }
+            .buttonStyle(.bordered)
+        }
+    }
+    
+    private var licenseActivationView: some View {
+        VStack(spacing: 20) {
+            if licenseService.hasValidLicense {
+                VStack(spacing: 12) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.green)
+                    
+                    Text("License Active")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    Text("You have an active \(licenseService.licenseType) license.")
+                        .multilineTextAlignment(.center)
+                    
+                    if licenseService.licenseType == "subscription" || licenseService.licenseType == "trial" {
+                        Text("Expires: \(licenseService.expirationDateString)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+                
+                Button("Manage Subscription") {
+                    // Open subscription management
+                }
+                .buttonStyle(.bordered)
+                .padding(.top)
+                
+                Divider().padding(.vertical)
+                
+                Text("Want to activate on another device?")
+                    .foregroundColor(.secondary)
+                
+                Text("Remaining activations: \(licenseService.remainingActivations)")
+                    .foregroundColor(.blue)
+                
+            } else {
+                Text("Enter your license key to activate PhotoMigrator.")
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.secondary)
+                
+                TextField("License Key", text: $activationKey)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)
+                    .padding(.vertical)
+                
+                Button(isActivating ? "Activating..." : "Activate License") {
+                    activateLicense()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isActivating || activationKey.isEmpty)
+                
+                Divider().padding(.vertical)
+                
+                VStack(spacing: 10) {
+                    Text("Don't have a license yet?")
+                        .foregroundColor(.secondary)
+                    
+                    Button("Purchase License") {
+                        // Open purchase URL
+                        if let url = URL(string: "https://www.photomigrator.com/purchase") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button("Start Free Trial") {
+                        startTrial()
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+        }
+    }
+    
+    private var successView: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "checkmark.circle.fill")
+                .resizable()
+                .frame(width: 80, height: 80)
+                .foregroundColor(.green)
+            
+            Text("License Activated!")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Text("Thank you for activating PhotoMigrator. You now have full access to all features.")
+                .multilineTextAlignment(.center)
+                .foregroundColor(.secondary)
+            
+            Button("Continue") {
+                presentationMode.wrappedValue.dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.top)
+        }
+        .padding()
+    }
+    
+    // MARK: - Actions
+    
+    private func signIn() {
+        if email.isEmpty || password.isEmpty {
+            showError = true
+            errorMessage = "Please enter both email and password."
+            return
+        }
+        
+        showError = false
+        Task {
+            do {
+                try await authService.signIn(email: email, password: password)
+                // Refresh license status
+                await licenseService.refreshLicenseStatus()
+            } catch {
+                showError = true
+                errorMessage = "Sign in failed: \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    private func createAccount() {
+        if email.isEmpty || password.isEmpty {
+            showError = true
+            errorMessage = "Please enter both email and password."
+            return
+        }
+        
+        if password != confirmPassword {
+            showError = true
+            errorMessage = "Passwords do not match."
+            return
+        }
+        
+        showError = false
+        Task {
+            do {
+                try await authService.createAccount(email: email, password: password)
+                isCreatingAccount = false
+                // Automatically sign in
+                try await authService.signIn(email: email, password: password)
+            } catch {
+                showError = true
+                errorMessage = "Account creation failed: \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    private func activateLicense() {
+        isActivating = true
+        showError = false
+        
+        Task {
+            do {
+                try await licenseService.activateLicense(licenseKey: activationKey)
+                isActivating = false
+                showSuccess = true
+            } catch {
+                isActivating = false
+                showError = true
+                errorMessage = "License activation failed: \(error.localizedDescription)"
+            }
+        }
+    }
+    
+    private func startTrial() {
+        showError = false
+        
+        Task {
+            do {
+                try await licenseService.startTrial()
+                showSuccess = true
+            } catch {
+                showError = true
+                errorMessage = "Could not start trial: \(error.localizedDescription)"
+            }
         }
     }
 }
 
+// Preview
+#if DEBUG
 struct LicenseActivationView_Previews: PreviewProvider {
     static var previews: some View {
         LicenseActivationView()
     }
 }
+#endif

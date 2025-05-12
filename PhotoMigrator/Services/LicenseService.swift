@@ -1,364 +1,300 @@
 import Foundation
 import Combine
-import Supabase
 
-/// Service for managing and validating software licenses
+enum LicenseType: String, Codable {
+    case trial = "trial"
+    case subscription = "subscription"
+    case perpetual = "perpetual"
+    case none = "none"
+}
+
+enum LicenseError: Error {
+    case invalidLicenseKey
+    case licenseExpired
+    case noRemainingActivations
+    case alreadyActivated
+    case networkError
+    case serverError
+    case trialAlreadyUsed
+    case unknown
+    
+    var localizedDescription: String {
+        switch self {
+        case .invalidLicenseKey:
+            return "Invalid license key. Please check your key and try again."
+        case .licenseExpired:
+            return "This license has expired. Please renew your subscription."
+        case .noRemainingActivations:
+            return "No remaining activations for this license. Please deactivate on another device or purchase additional seats."
+        case .alreadyActivated:
+            return "This license is already activated on this device."
+        case .networkError:
+            return "Network error. Please check your internet connection and try again."
+        case .serverError:
+            return "Server error. Please try again later."
+        case .trialAlreadyUsed:
+            return "Trial period has already been used on this device."
+        case .unknown:
+            return "An unknown error occurred. Please try again."
+        }
+    }
+}
+
+struct License: Codable {
+    let id: String
+    let userId: String
+    let key: String
+    let type: LicenseType
+    let activationsCount: Int
+    let maxActivations: Int
+    let createdAt: Date
+    let expiresAt: Date?
+    
+    var isExpired: Bool {
+        if let expiryDate = expiresAt {
+            return Date() > expiryDate
+        }
+        return false
+    }
+    
+    var hasRemainingActivations: Bool {
+        return activationsCount < maxActivations
+    }
+}
+
+struct MachineInfo: Codable {
+    let id: String
+    let name: String
+    let model: String
+    let osVersion: String
+}
+
 class LicenseService: ObservableObject {
-    /// Shared singleton instance
     static let shared = LicenseService()
     
-    /// License state
-    @Published var licenseState: LicenseState = .unknown
+    @Published var hasValidLicense: Bool = false
+    @Published var licenseType: String = "none"
+    @Published var expirationDate: Date?
+    @Published var daysRemainingInTrial: Int = 0
+    @Published var remainingActivations: Int = 0
+    @Published var canUseApp: Bool = false
     
-    /// Current license, if any
-    @Published var currentLicense: License?
+    private var currentLicense: License?
+    private var machineIdentifier: String = ""
     
-    /// Current error message, if any
-    @Published var errorMessage: String?
+    private let supabaseURL = "https://yourproject.supabase.co"
+    private let supabaseKey = "your-supabase-key"
     
-    /// Whether a license activation is in progress
-    @Published var isActivating = false
-    
-    /// Machine identification for activation
-    private let machineId = MachineIdentifier.shared.getHardwareIdentifier()
-    
-    /// Local storage key for license
-    private let licenseStorageKey = "PhotoMigrator.License"
-    
-    /// Authentication service
-    private let authService = AuthService.shared
-    
-    /// License states
-    enum LicenseState {
-        case unknown
-        case valid
-        case expired
-        case invalid
-        case notActivated
-        case trial
-        case noLicense
-    }
-    
-    /// Private initializer for singleton
     private init() {
-        // Load license from local storage
-        loadSavedLicense()
+        // Generate or retrieve machine identifier
+        generateMachineIdentifier()
         
-        // Listen for authentication state changes
-        setupAuthStateListener()
+        // Check for existing license
+        checkExistingLicense()
     }
     
-    /// Set up listener for authentication state changes
-    private func setupAuthStateListener() {
-        // When auth state changes, check if we need to fetch license info
-        authService.$authState
-            .sink { [weak self] state in
-                if state == .authenticated {
-                    Task {
-                        await self?.fetchLicenseForCurrentUser()
-                    }
-                } else if state == .unauthenticated {
-                    // Clear license if user logs out
-                    self?.clearLicense()
+    private func generateMachineIdentifier() {
+        // In a real implementation, this would generate a unique hardware identifier
+        // based on system information that persists across app reinstalls
+        
+        if let storedId = UserDefaults.standard.string(forKey: "machineIdentifier") {
+            machineIdentifier = storedId
+        } else {
+            // Generate a new identifier
+            // In a real app, this would use system information (serial number, etc.)
+            // For demo purposes, use a UUID
+            machineIdentifier = UUID().uuidString
+            UserDefaults.standard.set(machineIdentifier, forKey: "machineIdentifier")
+        }
+    }
+    
+    private func checkExistingLicense() {
+        // In a real implementation, this would check for a stored license
+        // and validate it with Supabase
+        
+        if let licenseData = UserDefaults.standard.data(forKey: "currentLicense"),
+           let license = try? JSONDecoder().decode(License.self, from: licenseData) {
+            
+            // Validate license
+            if license.type == .perpetual || (license.expiresAt != nil && license.expiresAt! > Date()) {
+                // License is valid
+                currentLicense = license
+                hasValidLicense = true
+                licenseType = license.type.rawValue
+                expirationDate = license.expiresAt
+                
+                if let expDate = license.expiresAt {
+                    daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: expDate).day ?? 0
+                }
+                
+                remainingActivations = license.maxActivations - license.activationsCount
+                canUseApp = true
+            } else {
+                // License has expired
+                hasValidLicense = false
+                licenseType = "none"
+                
+                // Check if trial is still valid
+                if let trialExpiry = UserDefaults.standard.object(forKey: "trialExpirationDate") as? Date,
+                   trialExpiry > Date() {
+                    // Trial is still valid
+                    licenseType = "trial"
+                    expirationDate = trialExpiry
+                    daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: trialExpiry).day ?? 0
+                    canUseApp = true
+                } else {
+                    canUseApp = false
                 }
             }
-            .store(in: &cancellables)
+        } else {
+            // No license found, check for trial
+            if let trialExpiry = UserDefaults.standard.object(forKey: "trialExpirationDate") as? Date {
+                if trialExpiry > Date() {
+                    // Trial is still valid
+                    hasValidLicense = true
+                    licenseType = "trial"
+                    expirationDate = trialExpiry
+                    daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: trialExpiry).day ?? 0
+                    canUseApp = true
+                } else {
+                    // Trial has expired
+                    hasValidLicense = false
+                    licenseType = "none"
+                    canUseApp = false
+                }
+            } else {
+                // No trial or license
+                hasValidLicense = false
+                licenseType = "none"
+                canUseApp = false
+            }
+        }
     }
     
-    /// Subscriptions for Combine
-    private var cancellables = Set<AnyCancellable>()
+    // MARK: - License Methods
     
-    /// Load license from local storage
-    private func loadSavedLicense() {
-        guard let data = UserDefaults.standard.data(forKey: licenseStorageKey) else {
-            licenseState = .noLicense
-            return
-        }
+    func activateLicense(licenseKey: String) async throws {
+        // Simulate network request to Supabase for license activation
+        // In a real implementation, this would make an API call
         
-        do {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
+        // Simulate delay for network request
+        try await Task.sleep(nanoseconds: 2_000_000_000)
+        
+        // Placeholder logic for license validation
+        // In a real app, we would validate the license key with the server
+        if licenseKey.count >= 10 {
+            // Create a mock license
+            let license = License(
+                id: UUID().uuidString,
+                userId: "user123",
+                key: licenseKey,
+                type: .perpetual,
+                activationsCount: 1,
+                maxActivations: 2,
+                createdAt: Date(),
+                expiresAt: nil
+            )
             
-            let license = try decoder.decode(License.self, from: data)
-            currentLicense = license
-            
-            // Validate the loaded license
-            validateLicense(license)
-        } catch {
-            licenseState = .noLicense
-            errorMessage = "Failed to load license: \(error.localizedDescription)"
-        }
-    }
-    
-    /// Save license to local storage
-    private func saveLicense(_ license: License) {
-        do {
+            // Store the license locally
             let encoder = JSONEncoder()
-            encoder.dateEncodingStrategy = .iso8601
-            
-            let data = try encoder.encode(license)
-            UserDefaults.standard.set(data, forKey: licenseStorageKey)
-        } catch {
-            errorMessage = "Failed to save license: \(error.localizedDescription)"
-        }
-    }
-    
-    /// Clear the current license
-    private func clearLicense() {
-        currentLicense = nil
-        licenseState = .noLicense
-        UserDefaults.standard.removeObject(forKey: licenseStorageKey)
-    }
-    
-    /// Validate a license
-    private func validateLicense(_ license: License) {
-        // Check if license is active
-        if !license.isActive {
-            licenseState = .invalid
-            return
-        }
-        
-        // Check for expiration
-        if license.isExpired {
-            licenseState = .expired
-            return
-        }
-        
-        // Check type
-        if license.type == .trial {
-            licenseState = .trial
-            return
-        }
-        
-        // If all checks pass
-        licenseState = .valid
-    }
-    
-    /// Fetch license for the current authenticated user
-    func fetchLicenseForCurrentUser() async {
-        guard let supabase = AuthService.shared.supabase,
-              let currentUser = authService.currentUser else {
-            await MainActor.run {
-                licenseState = .noLicense
-            }
-            return
-        }
-        
-        do {
-            // Query licenses table for this user
-            let response = try await supabase.from("licenses")
-                .select()
-                .eq("user_id", value: currentUser.id)
-                .order("purchased_at", ascending: false)
-                .limit(1)
-                .execute()
-            
-            if let data = response.data,
-               let jsonArray = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]],
-               !jsonArray.isEmpty {
-                
-                // Parse the license
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                decoder.dateDecodingStrategy = .iso8601
-                
-                if let licenseData = try? JSONSerialization.data(withJSONObject: jsonArray[0]),
-                   let license = try? decoder.decode(License.self, from: licenseData) {
-                    
-                    await MainActor.run {
-                        self.currentLicense = license
-                        self.validateLicense(license)
-                        self.saveLicense(license)
-                    }
-                    return
-                }
+            if let licenseData = try? encoder.encode(license) {
+                UserDefaults.standard.set(licenseData, forKey: "currentLicense")
             }
             
-            // If no license found or parsing failed
+            // Update UI on main thread
             await MainActor.run {
-                self.licenseState = .noLicense
+                self.currentLicense = license
+                self.hasValidLicense = true
+                self.licenseType = license.type.rawValue
+                self.expirationDate = license.expiresAt
+                self.remainingActivations = license.maxActivations - license.activationsCount
+                self.canUseApp = true
             }
-        } catch {
-            await MainActor.run {
-                self.errorMessage = "Failed to fetch license: \(error.localizedDescription)"
-                self.licenseState = .unknown
-            }
+        } else {
+            throw LicenseError.invalidLicenseKey
         }
     }
     
-    /// Activate a license key
-    func activateLicense(licenseKey: String) async {
-        guard let supabase = AuthService.shared.supabase else {
-            await MainActor.run {
-                errorMessage = "Not connected to license server"
-                licenseState = .unknown
-            }
-            return
+    func startTrial() async throws {
+        // Check if trial has already been used
+        if UserDefaults.standard.object(forKey: "trialExpirationDate") != nil {
+            throw LicenseError.trialAlreadyUsed
         }
         
+        // Simulate network request to Supabase to register trial
+        // In a real implementation, this would make an API call
+        
+        // Simulate delay for network request
+        try await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        // Set trial expiration to 14 days from now
+        let trialExpirationDate = Calendar.current.date(byAdding: .day, value: 14, to: Date())!
+        UserDefaults.standard.set(trialExpirationDate, forKey: "trialExpirationDate")
+        
+        // Update UI on main thread
         await MainActor.run {
-            isActivating = true
+            self.hasValidLicense = true
+            self.licenseType = "trial"
+            self.expirationDate = trialExpirationDate
+            self.daysRemainingInTrial = 14
+            self.canUseApp = true
         }
+    }
+    
+    func refreshLicenseStatus() async {
+        // In a real implementation, this would check the license status with the server
+        // For demo purposes, just re-check the local state
         
-        do {
-            // 1. Validate the license key exists and is available
-            let licenseResponse = try await supabase.from("licenses")
-                .select()
-                .eq("license_key", value: licenseKey)
-                .single()
-                .execute()
-            
-            guard let licenseData = licenseResponse.data,
-                  let license = try? JSONDecoder().decode(License.self, from: licenseData) else {
-                await MainActor.run {
-                    errorMessage = "Invalid license key"
-                    licenseState = .invalid
-                    isActivating = false
-                }
-                return
-            }
-            
-            // 2. Verify license can be activated
-            if !license.canBeActivated {
-                if license.isExpired {
-                    await MainActor.run {
-                        errorMessage = "License has expired"
-                        licenseState = .expired
-                        isActivating = false
-                    }
-                } else if !license.isActive {
-                    await MainActor.run {
-                        errorMessage = "License is inactive"
-                        licenseState = .invalid
-                        isActivating = false
-                    }
-                } else if license.activationsUsed >= license.maxActivations {
-                    await MainActor.run {
-                        errorMessage = "Maximum activations reached"
-                        licenseState = .invalid
-                        isActivating = false
-                    }
-                }
-                return
-            }
-            
-            // 3. Register the activation
-            let activationData: [String: Any] = [
-                "license_id": license.id,
-                "machine_id": machineId,
-                "activated_at": ISO8601DateFormatter().string(from: Date()),
-                "is_active": true
-            ]
-            
-            let _ = try await supabase.from("license_activations")
-                .insert(values: activationData)
-                .execute()
-            
-            // 4. Update the license activations count
-            let newActivationsCount = license.activationsUsed + 1
-            let updateData = ["activations_used": newActivationsCount]
-            
-            let _ = try await supabase.from("licenses")
-                .update(values: updateData)
-                .eq("id", value: license.id)
-                .execute()
-            
-            // 5. Update local license state
-            var updatedLicense = license
-            updatedLicense.activationsUsed = newActivationsCount
-            
-            await MainActor.run {
-                currentLicense = updatedLicense
-                validateLicense(updatedLicense)
-                saveLicense(updatedLicense)
-                errorMessage = nil
-                isActivating = false
-            }
-        } catch {
-            await MainActor.run {
-                errorMessage = "License activation failed: \(error.localizedDescription)"
-                licenseState = .unknown
-                isActivating = false
-            }
-        }
+        checkExistingLicense()
     }
     
-    /// Deactivate the current license on this machine
-    func deactivateLicense() async {
-        guard let supabase = AuthService.shared.supabase,
-              let license = currentLicense else {
-            await MainActor.run {
-                errorMessage = "No active license to deactivate"
-            }
-            return
-        }
+    func deactivateLicense() async throws {
+        // Simulate network request to Supabase to deactivate license
+        // In a real implementation, this would make an API call
         
-        do {
-            // Find and deactivate this machine's activation
-            let _ = try await supabase.from("license_activations")
-                .update(values: ["is_active": false])
-                .eq("license_id", value: license.id)
-                .eq("machine_id", value: machineId)
-                .execute()
+        // Simulate delay for network request
+        try await Task.sleep(nanoseconds: 1_500_000_000)
+        
+        // Clear license data
+        UserDefaults.standard.removeObject(forKey: "currentLicense")
+        
+        // Update UI on main thread
+        await MainActor.run {
+            self.currentLicense = nil
+            self.hasValidLicense = false
+            self.licenseType = "none"
+            self.expirationDate = nil
+            self.remainingActivations = 0
             
-            // Clear local license
-            await MainActor.run {
-                clearLicense()
-                errorMessage = nil
-            }
-        } catch {
-            await MainActor.run {
-                errorMessage = "License deactivation failed: \(error.localizedDescription)"
+            // Check if trial is still valid
+            if let trialExpiry = UserDefaults.standard.object(forKey: "trialExpirationDate") as? Date,
+               trialExpiry > Date() {
+                self.licenseType = "trial"
+                self.expirationDate = trialExpiry
+                self.daysRemainingInTrial = Calendar.current.dateComponents([.day], from: Date(), to: trialExpiry).day ?? 0
+                self.canUseApp = true
+            } else {
+                self.canUseApp = false
             }
         }
     }
     
-    /// Check if the app has a valid license and can be used
-    var canUseApp: Bool {
-        // Always allow use when:
-        // 1. License is valid
-        // 2. License is in trial period
-        // 3. User has an active subscription
-        return licenseState == .valid || 
-               licenseState == .trial || 
-               (authService.currentUser?.canUseApp ?? false)
+    // Helper properties
+    
+    var expirationDateString: String {
+        if let date = expirationDate {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+            return formatter.string(from: date)
+        }
+        return "Never"
     }
     
-    /// Get a human-readable license status message
-    var licenseStatusMessage: String {
-        switch licenseState {
-        case .unknown:
-            return "License status unknown"
-        case .valid:
-            if let license = currentLicense {
-                if license.type == .subscription {
-                    if let timeRemaining = license.formattedTimeRemaining {
-                        return "Licensed (Subscription, \(timeRemaining))"
-                    }
-                    return "Licensed (Subscription)"
-                }
-                return "Licensed (Perpetual)"
-            }
-            return "Licensed"
-        case .expired:
-            return "License expired"
-        case .invalid:
-            return "Invalid license"
-        case .notActivated:
-            return "License not activated"
-        case .trial:
-            if let license = currentLicense, let timeRemaining = license.formattedTimeRemaining {
-                return "Trial (\(timeRemaining))"
-            }
-            return "Trial"
-        case .noLicense:
-            if let user = authService.currentUser, user.canUseApp {
-                if user.accountType == .trial, let timeRemaining = user.formattedTrialTimeRemaining {
-                    return "Trial (\(timeRemaining))"
-                }
-                return "Active via subscription"
-            }
-            return "No license"
+    var activationsString: String {
+        if let license = currentLicense {
+            return "\(license.activationsCount)/\(license.maxActivations)"
         }
+        return "0/0"
     }
 }

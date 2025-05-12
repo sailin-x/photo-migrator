@@ -2,172 +2,279 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var currentPage = 0
     
-    // Pages of onboarding content
-    private let pages = [
-        OnboardingPage(
-            title: "Welcome to PhotoMigrator",
-            description: "Easily migrate your photos and videos from Google Photos to Apple Photos while preserving metadata and organization.",
-            image: "photo.on.rectangle.angled",
-            tip: "PhotoMigrator preserves dates, locations, descriptions, and album structure."
-        ),
-        OnboardingPage(
-            title: "Get Your Google Photos",
-            description: "First, download your photos from Google Takeout. We'll help you with the process.",
-            image: "arrow.down.circle",
-            tip: "Tip: Choose the 'Google Photos' option only when exporting from Google Takeout to minimize download size."
-        ),
-        OnboardingPage(
-            title: "Select and Import",
-            description: "Select your Google Takeout archive and PhotoMigrator will handle the rest, preserving metadata and organization.",
-            image: "square.and.arrow.down",
-            tip: "Larger libraries can take longer to process. You can use batch processing for better performance."
-        ),
-        OnboardingPage(
-            title: "Advanced Features",
-            description: "PhotoMigrator offers batch processing for large libraries and detailed statistics about your migration.",
-            image: "chart.bar.doc.horizontal",
-            tip: "You can customize batch processing parameters in Preferences to optimize for your system."
-        ),
-        OnboardingPage(
-            title: "Ready to Start",
-            description: "You're all set! Start your migration by selecting your Google Takeout archive.",
-            image: "checkmark.circle",
-            tip: "Need help? Check the in-app documentation or visit photomigrator.app/support"
-        )
-    ]
+    @State private var currentPage = 0
+    @State private var hasAcceptedTerms = false
+    @State private var hasAcknowledgedPrivacyPolicy = false
+    @State private var shouldShowTerms = false
+    @State private var shouldShowPrivacyPolicy = false
+    
+    let totalPages = 4
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Progress indicators
-            HStack(spacing: 8) {
-                ForEach(0..<pages.count, id: \.self) { index in
-                    Circle()
-                        .fill(currentPage == index ? Color.blue : Color.gray.opacity(0.3))
-                        .frame(width: 8, height: 8)
-                }
+        VStack {
+            // Header with progress indicator
+            HStack {
+                Text("Welcome to PhotoMigrator")
+                    .font(.title)
+                    .fontWeight(.bold)
                 
                 Spacer()
                 
-                // Skip button
-                Button("Skip") {
-                    presentationMode.wrappedValue.dismiss()
+                HStack(spacing: 5) {
+                    ForEach(0..<totalPages, id: \.self) { index in
+                        Circle()
+                            .fill(currentPage >= index ? Color.blue : Color.gray.opacity(0.3))
+                            .frame(width: 10, height: 10)
+                    }
                 }
-                .buttonStyle(.borderless)
-                .foregroundColor(.secondary)
             }
-            .padding(.horizontal)
-            .padding(.top)
+            .padding()
             
-            // Page content
+            // Content pages
             TabView(selection: $currentPage) {
-                ForEach(0..<pages.count, id: \.self) { index in
-                    OnboardingPageView(page: pages[index])
-                        .tag(index)
-                }
+                // Page 1: Welcome
+                welcomeView
+                    .tag(0)
+                
+                // Page 2: Features
+                featuresView
+                    .tag(1)
+                
+                // Page 3: Terms and Privacy
+                legalView
+                    .tag(2)
+                
+                // Page 4: Get Started
+                getStartedView
+                    .tag(3)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             
             // Navigation buttons
             HStack {
-                // Back button
-                Button(action: {
-                    withAnimation {
-                        currentPage = max(0, currentPage - 1)
+                if currentPage > 0 {
+                    Button("Back") {
+                        withAnimation {
+                            currentPage -= 1
+                        }
                     }
-                }) {
-                    Image(systemName: "chevron.left")
-                        .font(.headline)
-                        .foregroundColor(currentPage > 0 ? .blue : .gray)
+                    .buttonStyle(.bordered)
                 }
-                .disabled(currentPage == 0)
-                .padding()
                 
                 Spacer()
                 
-                // Next/Finish button
-                Button(action: {
-                    if currentPage < pages.count - 1 {
-                        withAnimation {
-                            currentPage += 1
+                if currentPage < totalPages - 1 {
+                    Button(currentPage == 2 && (!hasAcceptedTerms || !hasAcknowledgedPrivacyPolicy) ? "Accept to Continue" : "Next") {
+                        if currentPage == 2 && (!hasAcceptedTerms || !hasAcknowledgedPrivacyPolicy) {
+                            // If on legal page and not accepted terms, stay on this page
+                        } else {
+                            withAnimation {
+                                currentPage += 1
+                            }
                         }
-                    } else {
-                        // Last page, finish onboarding
-                        presentationMode.wrappedValue.dismiss()
-                        
-                        // Save that we've completed onboarding
-                        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
                     }
-                }) {
-                    Text(currentPage < pages.count - 1 ? "Next" : "Get Started")
-                        .fontWeight(.medium)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                    .buttonStyle(.borderedProminent)
+                    .disabled(currentPage == 2 && (!hasAcceptedTerms || !hasAcknowledgedPrivacyPolicy))
+                } else {
+                    Button("Get Started") {
+                        completeOnboarding()
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                .padding()
-            }
-        }
-        .frame(width: 700, height: 500)
-    }
-}
-
-// Structure for onboarding page data
-struct OnboardingPage {
-    let title: String
-    let description: String
-    let image: String
-    let tip: String
-}
-
-// View for a single onboarding page
-struct OnboardingPageView: View {
-    let page: OnboardingPage
-    
-    var body: some View {
-        VStack(spacing: 30) {
-            // Icon
-            Image(systemName: page.image)
-                .font(.system(size: 80))
-                .foregroundColor(.blue)
-                .padding()
-            
-            // Title
-            Text(page.title)
-                .font(.title)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
-            // Description
-            Text(page.description)
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-            
-            // Tip
-            HStack {
-                Image(systemName: "lightbulb.fill")
-                    .foregroundColor(.yellow)
-                Text(page.tip)
-                    .font(.callout)
-                    .foregroundColor(.secondary)
             }
             .padding()
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(10)
-            .padding(.horizontal, 40)
-            
-            Spacer()
         }
-        .padding(.top, 40)
+        .frame(width: 800, height: 600)
+        .sheet(isPresented: $shouldShowTerms) {
+            TermsAndConditionsView(hasAcceptedTerms: $hasAcceptedTerms)
+        }
+        .sheet(isPresented: $shouldShowPrivacyPolicy) {
+            PrivacyPolicyView(hasAcknowledgedPrivacyPolicy: $hasAcknowledgedPrivacyPolicy)
+        }
     }
-}
-
-struct OnboardingView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingView()
+    
+    // MARK: - Page Views
+    
+    private var welcomeView: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "photo.on.rectangle.angled")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                .foregroundColor(.blue)
+            
+            Text("Welcome to PhotoMigrator")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Text("The seamless way to migrate from Google Photos to Apple Photos")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+            
+            Text("This application helps you move your entire photo library from Google Photos to Apple Photos, preserving all your metadata, albums, and original image quality.")
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .foregroundColor(.secondary)
+        }
+        .padding()
+    }
+    
+    private var featuresView: some View {
+        VStack(alignment: .leading, spacing: 30) {
+            Text("Key Features")
+                .font(.title)
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity, alignment: .center)
+            
+            VStack(alignment: .leading, spacing: 15) {
+                featureRow(icon: "rectangle.stack", title: "Google Takeout Support", description: "Import photos directly from Google Takeout archives")
+                featureRow(icon: "text.badge.checkmark", title: "Metadata Preservation", description: "Keep dates, locations, descriptions and more")
+                featureRow(icon: "photo.on.rectangle", title: "Live Photo Reconstruction", description: "Reconnect motion photos and live photos")
+                featureRow(icon: "folder", title: "Album Organization", description: "Maintain your original album structure")
+                featureRow(icon: "chart.bar", title: "Migration Statistics", description: "Get detailed reports on your migration")
+                featureRow(icon: "gearshape", title: "Advanced Settings", description: "Customize the migration process to your needs")
+            }
+            .padding(.horizontal)
+        }
+        .padding()
+    }
+    
+    private var legalView: some View {
+        VStack(spacing: 30) {
+            Text("Terms & Privacy")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Text("Please review and accept our Terms and Conditions and Privacy Policy to continue.")
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .foregroundColor(.secondary)
+            
+            VStack(spacing: 20) {
+                VStack {
+                    Button("View Terms and Conditions") {
+                        shouldShowTerms = true
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    HStack {
+                        Image(systemName: hasAcceptedTerms ? "checkmark.square.fill" : "square")
+                            .foregroundColor(hasAcceptedTerms ? .green : .gray)
+                        
+                        Text("I accept the Terms and Conditions")
+                            .foregroundColor(hasAcceptedTerms ? .primary : .secondary)
+                        
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        hasAcceptedTerms.toggle()
+                    }
+                }
+                
+                VStack {
+                    Button("View Privacy Policy") {
+                        shouldShowPrivacyPolicy = true
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    HStack {
+                        Image(systemName: hasAcknowledgedPrivacyPolicy ? "checkmark.square.fill" : "square")
+                            .foregroundColor(hasAcknowledgedPrivacyPolicy ? .green : .gray)
+                        
+                        Text("I acknowledge the Privacy Policy")
+                            .foregroundColor(hasAcknowledgedPrivacyPolicy ? .primary : .secondary)
+                        
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        hasAcknowledgedPrivacyPolicy.toggle()
+                    }
+                }
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(8)
+            .padding(.horizontal)
+        }
+        .padding()
+    }
+    
+    private var getStartedView: some View {
+        VStack(spacing: 30) {
+            Image(systemName: "sparkles")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 80, height: 80)
+                .foregroundColor(.blue)
+            
+            Text("You're All Set!")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Text("Thank you for choosing PhotoMigrator. You're now ready to start migrating your photos.")
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Next Steps:")
+                    .font(.headline)
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    stepRow(number: 1, text: "Download your Google Takeout archive")
+                    stepRow(number: 2, text: "Open the archive with PhotoMigrator")
+                    stepRow(number: 3, text: "Review migration settings")
+                    stepRow(number: 4, text: "Start the migration process")
+                }
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(8)
+            .padding(.horizontal)
+        }
+        .padding()
+    }
+    
+    // MARK: - Helper Views
+    
+    private func featureRow(icon: String, title: String, description: String) -> some View {
+        HStack(alignment: .top, spacing: 15) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.blue)
+                .frame(width: 30)
+            
+            VStack(alignment: .leading, spacing: 5) {
+                Text(title)
+                    .font(.headline)
+                
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+    
+    private func stepRow(number: Int, text: String) -> some View {
+        HStack(alignment: .top, spacing: 15) {
+            Text("\(number).")
+                .font(.headline)
+                .foregroundColor(.blue)
+            
+            Text(text)
+                .font(.body)
+        }
+    }
+    
+    // MARK: - Actions
+    
+    private func completeOnboarding() {
+        // Save that user has completed onboarding
+        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        
+        // Dismiss the onboarding view
+        presentationMode.wrappedValue.dismiss()
     }
 }
