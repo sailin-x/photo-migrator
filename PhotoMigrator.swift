@@ -1,8 +1,8 @@
 import Foundation
 
-// Enhanced command line interface with batch processing and statistics info
+// Enhanced command line interface with all features
 print("PhotoMigrator - Google Photos to Apple Photos Migration Tool")
-print("Version 1.2")
+print("Version 1.3 - Complete Release")
 print("")
 print("This command-line version displays information about the application.")
 print("The full GUI version requires macOS to run properly with PhotoKit access.")
@@ -17,6 +17,7 @@ print("- Maintain album organization")
 print("- Process various image formats (JPG, HEIC, PNG, etc.)")
 print("- Batch processing for very large libraries")
 print("- Detailed migration statistics and reports")
+print("- User preference persistence")
 print("")
 print("Batch Processing Features:")
 print("- Memory-efficient processing of large libraries")

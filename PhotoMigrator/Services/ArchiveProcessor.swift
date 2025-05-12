@@ -38,6 +38,14 @@ class ArchiveProcessor {
         setupLogFile()
     }
     
+    /// Initialize with progress tracking and user preferences
+    init(progress: MigrationProgress, preferences: UserPreferences = UserPreferences.shared) {
+        self.progress = progress
+        self.batchSettings = preferences.getBatchSettings()
+        self.batchProcessingEnabled = preferences.batchProcessingEnabled
+        setupLogFile()
+    }
+    
     /// Set up log file
     private func setupLogFile() {
         do {

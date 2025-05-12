@@ -6,6 +6,18 @@ struct SummaryView: View {
     
     @State private var isShowingLogFile = false
     @State private var isShowingDetailedStats = false
+    @State private var isShowingPreferences = false
+    
+    // Reference to user preferences
+    @ObservedObject private var preferences = UserPreferences.shared
+    
+    // Handle auto-export if enabled
+    private func handleAutoExport() {
+        if preferences.autoExportReport {
+            let reportGenerator = ReportGenerator()
+            _ = reportGenerator.generateReport(from: summary)
+        }
+    }
     
     /// Format memory size to human-readable string
     private func formatMemorySize(_ bytes: UInt64) -> String {
@@ -190,6 +202,18 @@ struct SummaryView: View {
                     }
                 }
             }
+            
+            // Preferences button
+            Button(action: {
+                isShowingPreferences = true
+            }) {
+                Label("Preferences", systemImage: "gear")
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.gray.opacity(0.2))
+                    .foregroundColor(.primary)
+                    .cornerRadius(8)
+            }
         }
         .padding()
         .frame(maxWidth: 600)
@@ -200,6 +224,23 @@ struct SummaryView: View {
         }
         .sheet(isPresented: $isShowingDetailedStats) {
             DetailedStatisticsView(summary: summary)
+        }
+        .sheet(isPresented: $isShowingPreferences) {
+            PreferencesView()
+        }
+        .onAppear {
+            // Save this migration to history
+            preferences.addRecentMigration(summary)
+            
+            // Auto-export report if enabled
+            handleAutoExport()
+            
+            // Auto-show detailed stats if enabled
+            if preferences.showDetailedStatsOnCompletion {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isShowingDetailedStats = true
+                }
+            }
         }
     }
 }
