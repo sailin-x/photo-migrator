@@ -1,0 +1,89 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/master.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/AuthChangeEvent.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/AuthChangeEvent.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/AuthChangeEvent.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/AuthChangeEvent~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/AuthChangeEvent.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Deprecated.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Deprecated.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Deprecated.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Deprecated~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Deprecated.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Endpoints.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Endpoints.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Endpoints.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Endpoints~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Endpoints.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Extensions.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Extensions.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Extensions.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Extensions.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/GoTrueClient.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueClient.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueClient.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueClient~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueClient.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/GoTrueError.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueError.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueError.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueError~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueError.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/GoTrueLocalStorage.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueLocalStorage.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueLocalStorage.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueLocalStorage~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrueLocalStorage.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Internal/ConcurrencySupport.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/ConcurrencySupport.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/ConcurrencySupport.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/ConcurrencySupport~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/ConcurrencySupport.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Internal/Environment.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Environment.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Environment.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Environment~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Environment.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Internal/Helpers.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Helpers.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Helpers.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Helpers~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Helpers.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Internal/SessionManager.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/SessionManager.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/SessionManager.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/SessionManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/SessionManager.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Internal/Shims.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Shims.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Shims.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Shims~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Shims.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Types.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Types.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Types.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Types~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Types.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/gotrue-swift/Sources/GoTrue/Version.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Version.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Version.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Version~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/Version.swiftdeps"
+  }
+}

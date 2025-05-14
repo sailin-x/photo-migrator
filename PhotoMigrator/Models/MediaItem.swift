@@ -7,6 +7,22 @@ enum MediaFileType {
     case livePhoto
     case motionPhoto
     case unknown
+    
+    /// Determine file type from file extension
+    static func determine(from url: URL) -> MediaFileType {
+        let ext = url.pathExtension.lowercased()
+        
+        if ["jpg", "jpeg", "png", "heic", "heif", "gif", "webp", "tiff", "tif", "bmp"].contains(ext) {
+            return .photo
+        } else if ["mp4", "mov", "m4v", "3gp", "avi", "mkv", "webm"].contains(ext) {
+            return .video
+        } else if ext == "mp" || ext == "mvimg" {
+            // Special Google Pixel motion photo formats
+            return .motionPhoto
+        } else {
+            return .unknown
+        }
+    }
 }
 
 /// Represents a media item (photo or video) with metadata
@@ -33,13 +49,22 @@ struct MediaItem {
     let fileURL: URL
     
     /// Type of media file
-    let fileType: MediaFileType
+    var fileType: MediaFileType
     
     /// Names of albums this media belongs to
     let albumNames: [String]
     
     /// Whether this is marked as a favorite
     let isFavorite: Bool
+    
+    /// URL to the motion component for Live Photos
+    var livePhotoComponentURL: URL?
+    
+    /// Flag indicating this is a motion component of a Live Photo
+    var isLivePhotoMotionComponent: Bool = false
+    
+    /// Paths to albums (may include hierarchy)
+    var albumPaths: [String] = []
     
     /// Related media items (e.g., video component of a Live Photo)
     var relatedItems: [MediaItem]?

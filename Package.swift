@@ -31,12 +31,13 @@ let package = Package(
                 "SwiftyJSON",
                 .product(name: "JWTDecode", package: "JWTDecode.swift"),
             ],
-            path: "PhotoMigrator"
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "PhotoMigratorTests",
-            dependencies: ["PhotoMigrator"],
-            path: "Tests"
+            dependencies: ["PhotoMigrator"]
         ),
     ]
 )

@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/master.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/JWTDecode.swift/JWTDecode/JWT.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWT.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWT.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWT~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWT.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/JWTDecode.swift/JWTDecode/JWTDecode.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecode.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecode.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecode~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecode.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/JWTDecode.swift/JWTDecode/JWTDecodeError.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecodeError.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecodeError.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecodeError~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/JWTDecode.build/JWTDecodeError.swiftdeps"
+  }
+}

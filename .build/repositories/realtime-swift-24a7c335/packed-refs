@@ -1,0 +1,25 @@
+# pack-refs with: peeled fully-peeled sorted 
+ce0c5ea57d478a86ddb0f39149e40c937e804a81 refs/heads/chore/add-linux-support
+5ea1fd24469191d5dd7421d3dbf42c88c5c0d5ba refs/heads/main
+d0efdf8c12ddfc6342de5957f86f35e7d65da8f9 refs/heads/update-upstream
+a93fc09a3c6136840eac0ab75087488fa26b130e refs/pull/1/head
+22d66acd5f7adc68d8e1f243eab042d3b6cfc0f5 refs/pull/11/head
+736bc497207b0fb659a73fb34b009d4b2e689b56 refs/pull/12/head
+7202a19942286818df1b31fe84cdf75f946c7b48 refs/pull/12/merge
+ce0c5ea57d478a86ddb0f39149e40c937e804a81 refs/pull/18/head
+805fb3be305a3f2f23ea46bdfe2f9e3710334b17 refs/pull/18/merge
+9edd2f771b6776ce21a7fae16ee9a4bdd52e869e refs/pull/2/head
+d0efdf8c12ddfc6342de5957f86f35e7d65da8f9 refs/pull/21/head
+b79e7cd18223f12a55404b2d9f23f73ae50623c5 refs/pull/21/merge
+16407b1b38f5f8d9693077598d0a41029850de0b refs/pull/22/head
+1f4bef63a654ae1576e01ad7bd8d445d423147f7 refs/pull/23/head
+bf3d18e452ae392ae32f554ae285c5b6cac73285 refs/pull/24/head
+196f9ca5dbf4d8be976220729620a90831710271 refs/pull/25/head
+673c9827584478d809d52b6ae20f0247bd834848 refs/pull/26/head
+23e4d875fa80cd8edec91a5f324a5ac9e53b86a1 refs/pull/27/head
+bacc35e8c18312ca2344f8bf3c2ed2e96ff4c630 refs/pull/28/head
+80c8296e5c744fa4693881e606248eb4fb6c0e8d refs/pull/4/head
+e1ffb80dce67631f0b33c4f8cb434a9122d148c2 refs/pull/5/head
+511c723d86c32d7eff198ed111363d6e0a406ec2 refs/pull/7/head
+2b55564e1a724ca62067b0dc76e5e69439c30b76 refs/tags/0.0.1
+0b985c687fe963f6bd818ff77a35c27247b98bb4 refs/tags/0.0.2

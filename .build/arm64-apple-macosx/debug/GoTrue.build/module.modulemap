@@ -1,0 +1,4 @@
+module GoTrue {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GoTrue.build/GoTrue-Swift.h"
+    requires objc
+}

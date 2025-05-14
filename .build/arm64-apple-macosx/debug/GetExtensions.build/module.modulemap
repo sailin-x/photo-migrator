@@ -1,0 +1,4 @@
+module GetExtensions {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/GetExtensions.build/GetExtensions-Swift.h"
+    requires objc
+}

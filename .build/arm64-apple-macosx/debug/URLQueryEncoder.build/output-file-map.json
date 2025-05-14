@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/URLQueryEncoder.build/master.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/checkouts/URLQueryEncoder/Sources/URLQueryEncoder/URLQueryEncoder.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/URLQueryEncoder.build/URLQueryEncoder.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/URLQueryEncoder.build/URLQueryEncoder.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/URLQueryEncoder.build/URLQueryEncoder~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/URLQueryEncoder.build/URLQueryEncoder.swiftdeps"
+  }
+}

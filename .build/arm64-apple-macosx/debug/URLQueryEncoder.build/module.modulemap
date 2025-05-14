@@ -1,0 +1,4 @@
+module URLQueryEncoder {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/URLQueryEncoder.build/URLQueryEncoder-Swift.h"
+    requires objc
+}

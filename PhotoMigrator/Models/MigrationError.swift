@@ -9,6 +9,10 @@ enum MigrationError: Error, LocalizedError {
     case fileAccessError(path: String)
     case metadataParsingError(details: String)
     case operationCancelled
+    case livePhotoReconstructionFailed(reason: String)
+    case livePhotoComponentMissing
+    case livePhotoVerificationFailed
+    case invalidMediaType(String)
     case unknown
     
     var errorDescription: String? {
@@ -29,6 +33,14 @@ enum MigrationError: Error, LocalizedError {
             return "Error parsing metadata: \(details)"
         case .operationCancelled:
             return "The migration operation was cancelled."
+        case .livePhotoReconstructionFailed(let reason):
+            return "Failed to reconstruct Live Photo: \(reason)"
+        case .livePhotoComponentMissing:
+            return "A required Live Photo component is missing."
+        case .livePhotoVerificationFailed:
+            return "The Live Photo was created but could not be verified."
+        case .invalidMediaType(let details):
+            return "Invalid media type: \(details)"
         case .unknown:
             return "An unknown error occurred."
         }
@@ -52,6 +64,14 @@ enum MigrationError: Error, LocalizedError {
             return "The JSON metadata file may be corrupt. Check the logs for more details."
         case .operationCancelled:
             return "You can start a new migration when ready."
+        case .livePhotoReconstructionFailed:
+            return "Check the logs for more details and try again."
+        case .livePhotoComponentMissing:
+            return "Check the logs for more details and try again."
+        case .livePhotoVerificationFailed:
+            return "Check the logs for more details and try again."
+        case .invalidMediaType:
+            return "Check the logs for more details and try again."
         case .unknown:
             return "Try restarting the application and your computer."
         }

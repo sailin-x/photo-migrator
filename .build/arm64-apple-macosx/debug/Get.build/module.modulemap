@@ -1,0 +1,4 @@
+module Get {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/Get.build/Get-Swift.h"
+    requires objc
+}

@@ -1,0 +1,95 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/master.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/BatchSettingsTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSettingsTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSettingsTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSettingsTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSettingsTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ImportResultTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ImportResultTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ImportResultTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ImportResultTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ImportResultTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/LicenseTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LicenseTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LicenseTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LicenseTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LicenseTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/MigrationErrorTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationErrorTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationErrorTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationErrorTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationErrorTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/MigrationProgressTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationProgressTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationProgressTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationProgressTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationProgressTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ModelsTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ModelsTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ModelsTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ModelsTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ModelsTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/ArchiveProcessorTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessorTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessorTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessorTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessorTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoProcessorTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/MetadataExtractorTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MetadataExtractorTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MetadataExtractorTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MetadataExtractorTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MetadataExtractorTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UserTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/DateTimeUtilsTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/DateTimeUtilsTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/DateTimeUtilsTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/DateTimeUtilsTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/DateTimeUtilsTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/FileUtilsTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/FileUtilsTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/FileUtilsTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/FileUtilsTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/FileUtilsTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/LocationUtilsTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LocationUtilsTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LocationUtilsTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LocationUtilsTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LocationUtilsTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/MemoryMonitorTests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MemoryMonitorTests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MemoryMonitorTests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MemoryMonitorTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MemoryMonitorTests.swiftdeps"
+  },
+  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/XCTestManifests.swift": {
+    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/XCTestManifests.d",
+    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/XCTestManifests.swift.o",
+    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/XCTestManifests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/XCTestManifests.swiftdeps"
+  }
+}

@@ -1,5 +1,6 @@
 import Foundation
 import Photos
+import os
 
 /// Service to process Google Takeout archives
 class ArchiveProcessor {
@@ -23,6 +24,11 @@ class ArchiveProcessor {
     
     /// Whether batch processing is enabled
     private var batchProcessingEnabled = true
+    
+    /// In the class declaration, add LivePhotoBuilder
+    private let logger = Logger.shared
+    private let livePhotoProcessor = LivePhotoProcessor()
+    private let livePhotoBuilder = LivePhotoBuilder()
     
     /// Initialize with progress tracking
     init(progress: MigrationProgress) {
@@ -532,6 +538,189 @@ class ArchiveProcessor {
         formatter.allowedUnits = [.useAll]
         formatter.countStyle = .memory
         return formatter.string(fromByteCount: Int64(bytes))
+    }
+    
+    private func scanForMediaFiles(in directory: URL) async throws -> [MediaItem] {
+        writeToLog("Scanning directory: \(directory.path)")
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                var mediaItems: [MediaItem] = []
+                var mediaFiles: [URL] = []
+                var jsonFiles: [URL] = []
+                
+                let directoryEnumerator = self.fileManager.enumerator(
+                    at: directory,
+                    includingPropertiesForKeys: [.isDirectoryKey, .nameKey, .pathKey],
+                    options: [.skipsHiddenFiles]
+                )
+                
+                while let fileURL = directoryEnumerator?.nextObject() as? URL {
+                    // Check for cancellation
+                    if self.isCancelled {
+                        continuation.resume(throwing: MigrationError.operationCancelled)
+                        return
+                    }
+                    
+                    // Update progress occasionally
+                    if mediaFiles.count % 100 == 0 {
+                        DispatchQueue.main.async {
+                            self.progress.currentItemName = fileURL.lastPathComponent
+                        }
+                    }
+                    
+                    do {
+                        let resourceValues = try fileURL.resourceValues(forKeys: [.isDirectoryKey])
+                        if resourceValues.isDirectory ?? false {
+                            continue
+                        }
+                        
+                        let fileExtension = fileURL.pathExtension.lowercased()
+                        
+                        if fileExtension == "json" {
+                            jsonFiles.append(fileURL)
+                        } else if self.isMediaFile(fileURL) {
+                            mediaFiles.append(fileURL)
+                        }
+                    } catch {
+                        self.writeToLog("Error accessing file at \(fileURL.path): \(error.localizedDescription)")
+                    }
+                }
+                
+                self.writeToLog("Found \(mediaFiles.count) media files and \(jsonFiles.count) JSON files")
+                self.writeToLog("Analyzing for potential Live Photo components...")
+                
+                // Group files by base name to help with Live Photo detection
+                var fileGroups: [String: [URL]] = [:]
+                for mediaFileURL in mediaFiles {
+                    let baseName = mediaFileURL.deletingPathExtension().lastPathComponent
+                    if fileGroups[baseName] == nil {
+                        fileGroups[baseName] = []
+                    }
+                    fileGroups[baseName]?.append(mediaFileURL)
+                }
+                
+                // Count of potential Live Photo pairs
+                var potentialLivePhotoPairs = 0
+                
+                // Process media files and find corresponding JSON files
+                for mediaFileURL in mediaFiles {
+                    // Check for cancellation
+                    if self.isCancelled {
+                        continuation.resume(throwing: MigrationError.operationCancelled)
+                        return
+                    }
+                    
+                    let mediaType = MediaItem.MediaType.determine(from: mediaFileURL)
+                    let albumPath = self.extractAlbumPath(for: mediaFileURL, relativeTo: directory)
+                    
+                    // Find corresponding JSON file(s)
+                    let jsonFileURL = self.findMatchingJsonFile(for: mediaFileURL, in: jsonFiles)
+                    
+                    // Extract metadata
+                    let metadata: MediaMetadata
+                    var isLivePhotoComponent = false
+                    var motionMediaType = mediaType
+                    
+                    // Check if this file is part of a Live Photo pair
+                    let baseName = mediaFileURL.deletingPathExtension().lastPathComponent
+                    if let group = fileGroups[baseName], group.count >= 2 {
+                        // If this group has both an image and a video, it could be a Live Photo pair
+                        let hasImage = group.contains { isImageFile($0) }
+                        let hasVideo = group.contains { isVideoFile($0) }
+                        
+                        if hasImage && hasVideo {
+                            potentialLivePhotoPairs += 1
+                            
+                            // Mark as potential Live Photo component
+                            if isImageFile(mediaFileURL) {
+                                motionMediaType = .livePhoto
+                                writeToLog("Identified potential Live Photo still image: \(mediaFileURL.lastPathComponent)")
+                            } else if isVideoFile(mediaFileURL) {
+                                isLivePhotoComponent = true
+                                writeToLog("Identified potential Live Photo motion component: \(mediaFileURL.lastPathComponent)")
+                            }
+                        }
+                    }
+                    
+                    if let jsonURL = jsonFileURL {
+                        do {
+                            metadata = try self.metadataExtractor.extractMetadata(from: jsonURL, for: mediaFileURL)
+                            
+                            // Check JSON data for Live Photo indicators
+                            if let jsonData = metadata.originalJsonData {
+                                if let isMotionPhoto = jsonData["isMotionPhoto"] as? Bool, isMotionPhoto {
+                                    motionMediaType = .motionPhoto
+                                    writeToLog("Found motion photo indicator in metadata for: \(mediaFileURL.lastPathComponent)")
+                                }
+                                
+                                if let motionPhotoUrl = jsonData["motionPhotoUrl"] as? String, !motionPhotoUrl.isEmpty {
+                                    motionMediaType = .motionPhoto
+                                    writeToLog("Found motion photo URL in metadata for: \(mediaFileURL.lastPathComponent)")
+                                }
+                            }
+                        } catch {
+                            self.writeToLog("Error extracting metadata for \(mediaFileURL.lastPathComponent): \(error.localizedDescription)")
+                            // Use empty metadata as fallback
+                            metadata = MediaMetadata()
+                        }
+                    } else {
+                        // No JSON file found, try to extract EXIF directly from media file
+                        metadata = self.metadataExtractor.extractExifMetadata(from: mediaFileURL)
+                        
+                        // Look for motion photo indicators in EXIF data
+                        if let originalJsonData = metadata.originalJsonData,
+                           originalJsonData["MotionPhoto"] != nil || originalJsonData["MotionPhotoVersion"] != nil {
+                            motionMediaType = .motionPhoto
+                            writeToLog("Found motion photo indicators in EXIF for: \(mediaFileURL.lastPathComponent)")
+                        }
+                        
+                        self.writeToLog("No JSON metadata found for \(mediaFileURL.lastPathComponent), using EXIF data")
+                    }
+                    
+                    // Create MediaItem
+                    var mediaItem = MediaItem(
+                        fileURL: mediaFileURL,
+                        originalFileName: mediaFileURL.lastPathComponent,
+                        fileType: motionMediaType,
+                        metadata: metadata
+                    )
+                    
+                    // Add album path information
+                    if !albumPath.isEmpty {
+                        let albumNames = albumPath.split(separator: "/").map(String.init)
+                        mediaItem.albumPaths = albumNames
+                    }
+                    
+                    // Add special flag for Live Photo motion components
+                    if isLivePhotoComponent {
+                        mediaItem.isLivePhotoMotionComponent = true
+                    }
+                    
+                    mediaItems.append(mediaItem)
+                }
+                
+                self.writeToLog("Processed \(mediaItems.count) media items, including \(potentialLivePhotoPairs) potential Live Photo pairs")
+                continuation.resume(returning: mediaItems)
+            }
+        }
+    }
+    
+    /// Check if a file is a media file we can process
+    private func isMediaFile(_ url: URL) -> Bool {
+        return isImageFile(url) || isVideoFile(url)
+    }
+    
+    /// Check if a file is an image file based on extension
+    private func isImageFile(_ url: URL) -> Bool {
+        let imageExtensions = ["jpg", "jpeg", "png", "heic", "heif", "tiff", "tif", "gif", "webp", "bmp"]
+        return imageExtensions.contains(url.pathExtension.lowercased())
+    }
+    
+    /// Check if a file is a video file based on extension
+    private func isVideoFile(_ url: URL) -> Bool {
+        let videoExtensions = ["mp4", "mov", "m4v", "3gp", "avi", "mkv", "webm", "mp"]
+        return videoExtensions.contains(url.pathExtension.lowercased())
     }
 }
 

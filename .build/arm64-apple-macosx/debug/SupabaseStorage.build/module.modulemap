@@ -1,0 +1,4 @@
+module SupabaseStorage {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/SupabaseStorage.build/SupabaseStorage-Swift.h"
+    requires objc
+}

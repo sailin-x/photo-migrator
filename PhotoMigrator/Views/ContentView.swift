@@ -7,6 +7,7 @@ struct ContentView: View {
     
     enum SidebarItem: String, CaseIterable, Identifiable {
         case importPhotos = "Import Photos"
+        case livePhotos = "Live Photos"
         case albums = "Albums"
         case statistics = "Statistics"
         case settings = "Settings"
@@ -16,6 +17,7 @@ struct ContentView: View {
         var icon: String {
             switch self {
             case .importPhotos: return "square.and.arrow.down"
+            case .livePhotos: return "livephoto"
             case .albums: return "rectangle.stack"
             case .statistics: return "chart.bar"
             case .settings: return "gearshape"
@@ -92,6 +94,8 @@ struct ContentView: View {
         switch selectedSidebarItem {
         case .importPhotos:
             ImportPhotosView()
+        case .livePhotos:
+            LivePhotoView()
         case .albums:
             AlbumsView()
         case .statistics:

@@ -1,0 +1,94 @@
+# Product Requirements Document - PhotoMigrator
+
+## Product Overview
+PhotoMigrator is a macOS application designed to assist users in migrating their Google Photos library to Apple Photos while preserving as much metadata and organizational structure as possible.
+
+## Problem Statement
+Users who wish to switch from Google Photos to Apple Photos face significant challenges:
+- Google Takeout exports contain complex and inconsistent file structures
+- Metadata is stored in separate JSON files that need to be parsed and applied
+- Live Photos and motion photos get split into separate components
+- Album organization is lost during manual transfers
+- Large libraries are difficult to process efficiently without memory issues
+
+PhotoMigrator solves these problems by providing a streamlined migration process that preserves metadata, reconstructs special media types, recreates organization, and handles large libraries with efficient batch processing.
+
+## Key Features
+
+### Archive Processing
+- Extract and navigate Google Takeout archive structures
+- Process multiple archives sequentially
+- Handle different Google Takeout formats and variations
+- Support processing from pre-extracted archive folders
+
+### Metadata Preservation
+- Extract metadata from JSON sidecar files:
+  - Original capture date and time (with timezone adjustment)
+  - Geolocation data (latitude, longitude, altitude)
+  - Descriptions and titles
+  - People tags/face recognition data
+  - Favorite status
+- Apply extracted metadata to photos during Apple Photos import
+- Fallback to embedded EXIF data when JSON is missing
+
+### Live Photo Reconstruction
+- Detect and pair image and video components of Live Photos
+- Reconnect the components during Apple Photos import
+- Support various Live Photo formats (including Google Pixel Motion Photos)
+
+### Album Organization
+- Parse and recreate album structures from Google Takeout metadata
+- Create corresponding albums in Apple Photos
+- Assign photos to correct albums during import
+- Handle album hierarchies where possible
+
+### Batch Processing
+- Implement memory-efficient batch processing for large libraries
+- Provide configurable batch size settings
+- Monitor memory usage and adjust processing accordingly
+- Display progress of batch operations
+
+### Statistics and Reporting
+- Track and report on migration outcomes
+- Provide detailed statistics on files processed, success rates
+- Generate visual reports of metadata preservation success
+- Log errors and issues for troubleshooting
+
+### User Interface
+- Create an intuitive, step-by-step interface to guide users
+- Implement clear progress indicators for long-running operations
+- Provide help and information about the migration process
+- Design confirmation dialogs for important operations
+
+## Technical Requirements
+
+### Platform Support
+- macOS 11.0 (Big Sur) or later
+- Native macOS application using Swift and SwiftUI
+- PhotoKit integration for Apple Photos access
+
+### Performance
+- Support libraries of 100,000+ photos
+- Efficient memory management for large operations
+- Background processing where possible
+- Performance monitoring and reporting
+
+### Security
+- All processing done locally without network access
+- Respect Apple's security and privacy guidelines
+- Request minimum required permissions
+
+## Implementation Milestones
+
+1. Project setup and architecture implementation
+2. Basic UI implementation 
+3. Google Takeout archive processing
+4. Metadata extraction and parsing
+5. PhotoKit integration for Photos import
+6. Live Photo reconstruction
+7. Album recreation in Photos
+8. Batch processing implementation
+9. Statistics and reporting system
+10. Comprehensive error handling
+11. User testing and feedback integration
+12. Final polishing and release 

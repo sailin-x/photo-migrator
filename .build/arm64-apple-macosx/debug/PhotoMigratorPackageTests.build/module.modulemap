@@ -1,0 +1,4 @@
+module PhotoMigratorPackageTests {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorPackageTests.build/PhotoMigratorPackageTests-Swift.h"
+    requires objc
+}

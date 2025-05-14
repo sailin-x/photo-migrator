@@ -1,0 +1,20 @@
+{
+  "title": "IMG_1234.jpg",
+  "description": "Sample photo description",
+  "photoTakenTime": {
+    "timestamp": "1647352245",
+    "formatted": "Mar 15, 2022, 2:30:45 PM UTC"
+  },
+  "geoData": {
+    "latitude": 40.7128,
+    "longitude": -74.0060,
+    "altitude": 10.0,
+    "latitudeSpan": 0.01,
+    "longitudeSpan": 0.01
+  },
+  "people": [
+    {"name": "Person 1"},
+    {"name": "Person 2"}
+  ],
+  "favorite": true
+} 

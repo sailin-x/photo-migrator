@@ -1,0 +1,4 @@
+module KeychainAccess {
+    header "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/KeychainAccess.build/KeychainAccess-Swift.h"
+    requires objc
+}
