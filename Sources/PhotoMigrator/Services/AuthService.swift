@@ -1,11 +1,26 @@
 import Foundation
 import Combine
 
-enum AuthState {
+enum AuthState: Equatable {
     case initializing
     case authenticated
     case unauthenticated
     case error(Error)
+    
+    static func == (lhs: AuthState, rhs: AuthState) -> Bool {
+        switch (lhs, rhs) {
+        case (.initializing, .initializing):
+            return true
+        case (.authenticated, .authenticated):
+            return true
+        case (.unauthenticated, .unauthenticated):
+            return true
+        case (.error(let lhsError), .error(let rhsError)):
+            return lhsError.localizedDescription == rhsError.localizedDescription
+        default:
+            return false
+        }
+    }
 }
 
 enum AuthError: Error {

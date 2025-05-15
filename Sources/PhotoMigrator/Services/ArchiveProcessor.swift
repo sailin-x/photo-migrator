@@ -29,6 +29,7 @@ class ArchiveProcessor {
     private let logger = Logger.shared
     private let livePhotoProcessor = LivePhotoProcessor()
     private let livePhotoBuilder = LivePhotoBuilder()
+    private let livePhotoManager = LivePhotoManager()
     
     /// Initialize with progress tracking
     init(progress: MigrationProgress) {
@@ -171,6 +172,14 @@ class ArchiveProcessor {
             processedMediaItems = try await processMetadataFiles(jsonFiles)
         }
         
+        if isCancelled { throw CancellationError() }
+        
+        // Process Live Photos
+        progress.currentStage = .processingLivePhotos
+        progress.stageProgress = 0
+        writeToLog("Identifying and processing Live Photos...")
+        
+        processedMediaItems = try await processLivePhotos(processedMediaItems)
         if isCancelled { throw CancellationError() }
         
         // Import photos
@@ -518,6 +527,32 @@ class ArchiveProcessor {
         return albumCount
     }
     
+    /// Process a list of media items to properly identify and reconstruct Live Photos
+    /// - Parameter mediaItems: Array of media items from metadata processing
+    /// - Returns: Updated array with Live Photos properly identified
+    private func processLivePhotos(_ mediaItems: [MediaItem]) async throws -> [MediaItem] {
+        if mediaItems.isEmpty {
+            return mediaItems
+        }
+        
+        // Check if Live Photo processing is enabled
+        guard livePhotoManager.processLivePhotos else {
+            logger.log("Live Photo processing is disabled. Skipping.")
+            return mediaItems
+        }
+        
+        logger.log("Processing Live Photos in \(mediaItems.count) media items")
+        
+        do {
+            let processedItems = try await livePhotoManager.processMediaItems(mediaItems, outputDirectory: nil)
+            logger.log("Live Photo processing complete. \(processedItems.count) items returned.")
+            return processedItems
+        } catch {
+            logger.log("Error processing Live Photos: \(error.localizedDescription)", level: .error)
+            throw error
+        }
+    }
+    
     // MARK: - Memory Monitoring
     
     /// Set up memory monitoring
@@ -732,3 +767,18 @@ struct PhotosImportResult {
 
 /// Error thrown when operation is cancelled
 struct CancellationError: Error {}
+
+/// Stages of migration process
+enum MigrationStage: String, CaseIterable {
+    case initializing = "Initializing"
+    case extractingArchive = "Extracting Archive"
+    case processingMetadata = "Processing Metadata"
+    case processingLivePhotos = "Processing Live Photos"
+    case importingPhotos = "Importing Photos"
+    case organizingAlbums = "Organizing Albums"
+    case complete = "Complete"
+    
+    var description: String {
+        return self.rawValue
+    }
+}

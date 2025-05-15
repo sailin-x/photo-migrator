@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// View that displays overall migration progress
-struct ProgressView: View {
+struct MigrationProgressView: View {
     @ObservedObject var progress: MigrationProgress
     let onCancel: () -> Void
     

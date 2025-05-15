@@ -5,6 +5,38 @@ class MemoryMonitor {
     /// Singleton instance
     static let shared = MemoryMonitor()
     
+    /// Memory pressure levels
+    enum MemoryPressure {
+        /// Normal memory usage
+        case normal
+        
+        /// Medium memory pressure
+        case medium
+        
+        /// High memory pressure
+        case high
+        
+        /// Critical memory pressure
+        case critical
+        
+        /// String description of the pressure level
+        var description: String {
+            switch self {
+            case .normal:
+                return "Normal"
+            case .medium:
+                return "Medium"
+            case .high:
+                return "High"
+            case .critical:
+                return "Critical"
+            }
+        }
+    }
+    
+    /// Current memory pressure level
+    var currentPressure: MemoryPressure = .normal
+    
     /// Callback for memory pressure notifications
     var onMemoryWarning: ((UInt64) -> Void)?
     
@@ -112,5 +144,17 @@ class MemoryMonitor {
         formatter.allowedUnits = [.useAll]
         formatter.countStyle = .memory
         return formatter.string(fromByteCount: Int64(bytes))
+    }
+    
+    /// Get current memory usage in bytes
+    func getCurrentMemoryUsage() -> UInt64 {
+        // This is a stub implementation
+        return 1024 * 1024 * 1024 // 1GB
+    }
+    
+    /// Get total system memory in bytes
+    func getTotalMemory() -> UInt64 {
+        // This is a stub implementation
+        return 16 * 1024 * 1024 * 1024 // 16GB
     }
 }

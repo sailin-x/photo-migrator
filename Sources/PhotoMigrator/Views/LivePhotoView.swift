@@ -138,14 +138,14 @@ struct LivePhotoView: View {
         .overlay(
             Group {
                 if isScanning {
-                    ProgressView("Scanning for Live Photos...")
+                    SwiftUI.ProgressView("Scanning for Live Photos...")
                         .padding()
                         .background(Color.secondary.opacity(0.1))
                         .cornerRadius(10)
                 } else if isReconstructing {
                     let current = getCurrentReconstructionProgress()
                     VStack {
-                        ProgressView("Reconstructing Live Photos...", value: current.0, total: current.1)
+                        SwiftUI.ProgressView("Reconstructing Live Photos...", value: current.0, total: current.1)
                             .progressViewStyle(.linear)
                             .padding(.bottom, 5)
                         

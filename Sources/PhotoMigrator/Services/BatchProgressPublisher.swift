@@ -40,6 +40,9 @@ enum BatchProgressEvent: Equatable {
     /// Overall process has completed
     case processingCompleted(totalProcessed: Int, successful: Int, failed: Int)
     
+    /// Live Photo processing progress event
+    case livePhotoProgress(progress: Double, stage: LivePhotoProcessingStage, message: String)
+    
     /// Static method to compare events for Equatable conformance
     static func == (lhs: BatchProgressEvent, rhs: BatchProgressEvent) -> Bool {
         switch (lhs, rhs) {
@@ -76,6 +79,9 @@ enum BatchProgressEvent: Equatable {
             
         case let (.processingCompleted(lTotal, lSuccess, lFail), .processingCompleted(rTotal, rSuccess, rFail)):
             return lTotal == rTotal && lSuccess == rSuccess && lFail == rFail
+            
+        case let (.livePhotoProgress(lProgress, lStage, lMessage), .livePhotoProgress(rProgress, rStage, rMessage)):
+            return lProgress == rProgress && lStage == rStage && lMessage == rMessage
             
         default:
             return false
@@ -246,6 +252,18 @@ class BatchProgressPublisher {
             .eraseToAnyPublisher()
     }
     
+    /// Publisher for Live Photo processing events
+    var livePhotoProgressPublisher: AnyPublisher<(progress: Double, stage: LivePhotoProcessingStage, message: String), Never> {
+        eventSubject
+            .compactMap { event -> (progress: Double, stage: LivePhotoProcessingStage, message: String)? in
+                if case let .livePhotoProgress(progress, stage, message) = event {
+                    return (progress, stage, message)
+                }
+                return nil
+            }
+            .eraseToAnyPublisher()
+    }
+    
     /// Private initialization for singleton
     private init() {}
     
@@ -315,6 +333,15 @@ class BatchProgressPublisher {
     /// Publish a processing completed event
     func publishProcessingCompleted(totalProcessed: Int, successful: Int, failed: Int) {
         publish(.processingCompleted(totalProcessed: totalProcessed, successful: successful, failed: failed))
+    }
+    
+    /// Update Live Photo processing progress
+    /// - Parameters:
+    ///   - progress: Current progress value (0.0 to 1.0)
+    ///   - stage: Current processing stage
+    ///   - message: Descriptive message about the current operation
+    func updateLivePhotoProgress(progress: Double, stage: LivePhotoProcessingStage, message: String) {
+        eventSubject.send(.livePhotoProgress(progress: progress, stage: stage, message: message))
     }
 }
 
@@ -527,6 +554,9 @@ class BatchProgressMonitor: ObservableObject {
             
         case let .processingCompleted(total, successful, failed):
             addLogMessage("Processing completed: \(total) total, \(successful) successful, \(failed) failed")
+            
+        case let .livePhotoProgress(progress, stage, message):
+            addLogMessage("Live Photo progress: \(progress * 100)% (\(stage.description), \(message))")
         }
     }
     

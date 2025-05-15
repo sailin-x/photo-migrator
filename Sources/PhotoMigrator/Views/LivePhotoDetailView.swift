@@ -29,7 +29,7 @@ struct LivePhotoDetailView: View {
                     AsyncImage(url: imageURL) { phase in
                         switch phase {
                         case .empty:
-                            ProgressView()
+                            SwiftUI.ProgressView()
                         case .success(let image):
                             image
                                 .resizable()

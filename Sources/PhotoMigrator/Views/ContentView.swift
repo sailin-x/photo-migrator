@@ -85,7 +85,7 @@ struct ContentView: View {
             }
         }
         .sheet(isPresented: $isShowingSettings) {
-            PreferencesView()
+            PreferencesTabView()
         }
     }
     
@@ -151,7 +151,7 @@ struct ImportPhotosView: View {
                 .disabled(takeoutArchivePath.isEmpty || isProcessing)
             }
             .padding()
-            .background(Color(.secondarySystemBackground))
+            .background(Color.secondary.opacity(0.2))
             .cornerRadius(12)
             
             // Progress display
@@ -160,7 +160,7 @@ struct ImportPhotosView: View {
                     Text("Migration in Progress")
                         .font(.headline)
                     
-                    ProgressView(value: progress)
+                    SwiftUI.ProgressView(value: progress, total: 1.0)
                         .progressViewStyle(.linear)
                         .frame(height: 10)
                     
@@ -174,7 +174,7 @@ struct ImportPhotosView: View {
                     .foregroundColor(.red)
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(12)
             }
             
@@ -195,7 +195,7 @@ struct ImportPhotosView: View {
                     .buttonStyle(.bordered)
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(12)
             }
             
@@ -303,7 +303,7 @@ struct AlbumsView: View {
                 .foregroundColor(.secondary)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(12)
         }
         .padding()
@@ -326,7 +326,7 @@ struct StatisticsView: View {
                 .foregroundColor(.secondary)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(12)
         }
         .padding()
@@ -349,14 +349,14 @@ struct SettingsView: View {
                 .foregroundColor(.secondary)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(12)
         }
         .padding()
     }
 }
 
-struct PreferencesView: View {
+struct PreferencesTabView: View {
     var body: some View {
         TabView {
             GeneralPreferencesView()

@@ -37,7 +37,7 @@ struct BatchProgressDashboardView: View {
                     Text("Overall Progress")
                         .font(.headline)
                     
-                    ProgressView(value: progressMonitor.overallProgress, total: 100)
+                    SwiftUI.ProgressView(value: progressMonitor.overallProgress / 100)
                         .accentColor(.blue)
                         .scaleEffect(x: 1, y: 2, anchor: .center)
                     
@@ -55,7 +55,7 @@ struct BatchProgressDashboardView: View {
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(8)
                 
                 // Batch info
@@ -84,7 +84,7 @@ struct BatchProgressDashboardView: View {
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(8)
                 
                 // Memory usage
@@ -124,7 +124,7 @@ struct BatchProgressDashboardView: View {
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(8)
                 
                 // Recent log messages
@@ -151,7 +151,7 @@ struct BatchProgressDashboardView: View {
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
+                .background(Color.secondary.opacity(0.2))
                 .cornerRadius(8)
                 
                 // Error display
@@ -169,7 +169,7 @@ struct BatchProgressDashboardView: View {
                             .cornerRadius(8)
                     }
                     .padding()
-                    .background(Color(.secondarySystemBackground))
+                    .background(Color.secondary.opacity(0.2))
                     .cornerRadius(8)
                 }
             }
@@ -242,7 +242,7 @@ struct InfoCard: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(Color(.tertiarySystemBackground))
+        .background(Color.secondary.opacity(0.2))
         .cornerRadius(8)
     }
 }
