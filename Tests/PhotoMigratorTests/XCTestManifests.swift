@@ -20,6 +20,12 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(PhotosImporterTests.allTests),
         testCase(UserPreferencesTests.allTests),
         testCase(BatchSizeAdvisorTests.allTests),
+        
+        // Integration Tests
+        testCase(ArchiveProcessingIntegrationTests.allTests),
+        testCase(LivePhotoReconstructionIntegrationTests.allTests),
+        testCase(PhotosImportIntegrationTests.allTests),
+        testCase(AlbumRecreationIntegrationTests.allTests),
     ]
 }
 #endif 
