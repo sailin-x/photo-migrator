@@ -71,7 +71,17 @@ class AuthService: ObservableObject {
             // network request to validate the token with Supabase
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.authState = .authenticated
-                self.currentUser = User(id: "user123", email: "user@example.com")
+                self.currentUser = User(
+                    id: "user123", 
+                    email: "user@example.com", 
+                    name: "Demo User", 
+                    createdAt: Date(), 
+                    lastLoginAt: Date(), 
+                    isEmailVerified: true, 
+                    subscriptionStatus: .active, 
+                    accountType: .premium, 
+                    trialEndsAt: nil
+                )
             }
         } else {
             authState = .unauthenticated
@@ -93,7 +103,17 @@ class AuthService: ObservableObject {
             UserDefaults.standard.set(token, forKey: "authToken")
             
             // Create user object
-            let user = User(id: "user123", email: email)
+            let user = User(
+                id: "user123", 
+                email: email, 
+                name: nil, 
+                createdAt: Date(), 
+                lastLoginAt: Date(), 
+                isEmailVerified: true, 
+                subscriptionStatus: .active, 
+                accountType: .basic, 
+                trialEndsAt: nil
+            )
             
             // Update UI on main thread
             await MainActor.run {
@@ -160,26 +180,4 @@ class AuthService: ObservableObject {
     }
 }
 
-// User model
-struct User: Codable, Identifiable {
-    let id: String
-    let email: String
-    var firstName: String?
-    var lastName: String?
-    var profileImageURL: URL?
-    
-    var fullName: String {
-        let first = firstName ?? ""
-        let last = lastName ?? ""
-        
-        if first.isEmpty && last.isEmpty {
-            return "User"
-        } else if first.isEmpty {
-            return last
-        } else if last.isEmpty {
-            return first
-        } else {
-            return "\(first) \(last)"
-        }
-    }
-}
+// Using the User model from Models/User.swift

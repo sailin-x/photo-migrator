@@ -1292,10 +1292,6 @@
       "inputs" : [
         {
           "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/ContentView.swift"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/BatchSettings.swift"
         },
         {
@@ -1308,7 +1304,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/LivePhotoPair.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaItem.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaMetadata.swift"
         },
         {
           "kind" : "file",
@@ -1321,10 +1325,6 @@
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/User.swift"
-        },
-        {
-          "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/PhotoMigratorApp.swift"
         },
         {
           "kind" : "file",
@@ -1420,7 +1420,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/Logger.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/MemoryMonitor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/SystemCompatibility.swift"
         },
         {
           "kind" : "file",
@@ -1472,6 +1480,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PhotoMigratorApp.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PreferencesView.swift"
         },
         {
@@ -1519,15 +1531,15 @@
       "moduleName" : "PhotoMigrator",
       "moduleOutputPath" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/Modules/PhotoMigrator.swiftmodule",
       "objects" : [
-        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ContentView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/BatchSettings.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ImportResult.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/License.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoPair.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaItem.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaMetadata.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MigrationError.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MigrationProgress.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/User.swift.o",
-        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/PhotoMigratorApp.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/AlbumManager.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/AppConfig.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ArchiveProcessor+MediaBatch.swift.o",
@@ -1551,7 +1563,9 @@
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/DateTimeUtils.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/FileUtils.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LocationUtils.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/Logger.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MemoryMonitor.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ArchiveSelectionView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/AuthenticationView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/BatchProgressDashboardView.swift.o",
@@ -1564,6 +1578,7 @@
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoDetailView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/OnboardingView.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/PhotoMigratorApp.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/PreferencesView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ProgressView.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SummaryView.swift.o",
@@ -1571,7 +1586,7 @@
       ],
       "otherArguments" : [
         "-target",
-        "arm64-apple-macosx11.0",
+        "arm64-apple-macosx12.0",
         "-enable-batch-mode",
         "-index-store-path",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/index/store",
@@ -1608,10 +1623,6 @@
       "outputs" : [
         {
           "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ContentView.swift.o"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/BatchSettings.swift.o"
         },
         {
@@ -1624,7 +1635,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoPair.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaItem.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaMetadata.swift.o"
         },
         {
           "kind" : "file",
@@ -1637,10 +1656,6 @@
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/User.swift.o"
-        },
-        {
-          "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/PhotoMigratorApp.swift.o"
         },
         {
           "kind" : "file",
@@ -1736,7 +1751,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/Logger.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MemoryMonitor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.swift.o"
         },
         {
           "kind" : "file",
@@ -1788,6 +1811,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/PhotoMigratorApp.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/PreferencesView.swift.o"
         },
         {
@@ -1809,15 +1836,15 @@
       ],
       "prepareForIndexing" : false,
       "sources" : [
-        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/ContentView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/BatchSettings.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/ImportResult.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/License.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/LivePhotoPair.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaItem.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaMetadata.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MigrationError.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MigrationProgress.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/User.swift",
-        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/PhotoMigratorApp.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Services/AlbumManager.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Services/AppConfig.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Services/ArchiveProcessor+MediaBatch.swift",
@@ -1841,7 +1868,9 @@
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/DateTimeUtils.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/FileUtils.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/LocationUtils.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/Logger.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/MemoryMonitor.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/SystemCompatibility.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/ArchiveSelectionView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/AuthenticationView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/BatchProgressDashboardView.swift",
@@ -1854,6 +1883,7 @@
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/LivePhotoDetailView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/LivePhotoView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/OnboardingView.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PhotoMigratorApp.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PreferencesView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/ProgressView.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/SummaryView.swift",
@@ -1892,7 +1922,7 @@
       ],
       "otherArguments" : [
         "-target",
-        "arm64-apple-macosx11.0",
+        "arm64-apple-macosx12.0",
         "-enable-batch-mode",
         "-index-store-path",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/index/store",
@@ -1958,6 +1988,22 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/AlbumRecreationIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/ArchiveProcessingIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/LivePhotoReconstructionIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/PhotosImportIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/LicenseTests.swift"
         },
         {
@@ -1978,11 +2024,27 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/BatchSizeAdvisorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoManagerTests.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoProcessorTests.swift"
         },
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/MetadataExtractorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/PhotosImporterTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/UserPreferencesTests.swift"
         },
         {
           "kind" : "file",
@@ -2027,13 +2089,21 @@
       "objects" : [
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSettingsTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ImportResultTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/AlbumRecreationIntegrationTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessingIntegrationTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoReconstructionIntegrationTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/PhotosImportIntegrationTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LicenseTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationErrorTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MigrationProgressTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ModelsTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessorTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSizeAdvisorTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoManagerTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MetadataExtractorTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/PhotosImporterTests.swift.o",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserPreferencesTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/DateTimeUtilsTests.swift.o",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/FileUtilsTests.swift.o",
@@ -2043,7 +2113,7 @@
       ],
       "otherArguments" : [
         "-target",
-        "arm64-apple-macosx11.0",
+        "arm64-apple-macosx12.0",
         "-enable-batch-mode",
         "-index-store-path",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/index/store",
@@ -2087,6 +2157,22 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/AlbumRecreationIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessingIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoReconstructionIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/PhotosImportIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LicenseTests.swift.o"
         },
         {
@@ -2107,11 +2193,27 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSizeAdvisorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoManagerTests.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/MetadataExtractorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/PhotosImporterTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserPreferencesTests.swift.o"
         },
         {
           "kind" : "file",
@@ -2146,13 +2248,21 @@
       "sources" : [
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/BatchSettingsTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ImportResultTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/AlbumRecreationIntegrationTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/ArchiveProcessingIntegrationTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/LivePhotoReconstructionIntegrationTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/PhotosImportIntegrationTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/LicenseTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/MigrationErrorTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/MigrationProgressTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ModelsTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/ArchiveProcessorTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/BatchSizeAdvisorTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoManagerTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoProcessorTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/MetadataExtractorTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/PhotosImporterTests.swift",
+        "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/UserPreferencesTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UserTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/DateTimeUtilsTests.swift",
         "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/FileUtilsTests.swift",
@@ -3461,15 +3571,15 @@
       "PhotoMigrator",
       "-incremental",
       "-c",
-      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/ContentView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/BatchSettings.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/ImportResult.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/License.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/LivePhotoPair.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaItem.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaMetadata.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MigrationError.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MigrationProgress.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/User.swift",
-      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/PhotoMigratorApp.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Services/AlbumManager.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Services/AppConfig.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Services/ArchiveProcessor+MediaBatch.swift",
@@ -3493,7 +3603,9 @@
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/DateTimeUtils.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/FileUtils.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/LocationUtils.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/Logger.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/MemoryMonitor.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/SystemCompatibility.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/ArchiveSelectionView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/AuthenticationView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/BatchProgressDashboardView.swift",
@@ -3506,6 +3618,7 @@
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/LivePhotoDetailView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/LivePhotoView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/OnboardingView.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PhotoMigratorApp.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PreferencesView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/ProgressView.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/SummaryView.swift",
@@ -3513,7 +3626,7 @@
       "-I",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/Modules",
       "-target",
-      "arm64-apple-macosx11.0",
+      "arm64-apple-macosx12.0",
       "-enable-batch-mode",
       "-index-store-path",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/index/store",
@@ -3558,7 +3671,7 @@
       "-I",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/Modules",
       "-target",
-      "arm64-apple-macosx11.0",
+      "arm64-apple-macosx12.0",
       "-enable-batch-mode",
       "-index-store-path",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/index/store",
@@ -3601,13 +3714,21 @@
       "-c",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/BatchSettingsTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ImportResultTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/AlbumRecreationIntegrationTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/ArchiveProcessingIntegrationTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/LivePhotoReconstructionIntegrationTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/PhotosImportIntegrationTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/LicenseTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/MigrationErrorTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/MigrationProgressTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ModelsTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/ArchiveProcessorTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/BatchSizeAdvisorTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoManagerTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoProcessorTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/MetadataExtractorTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/PhotosImporterTests.swift",
+      "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/UserPreferencesTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UserTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/DateTimeUtilsTests.swift",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/UtilsTests/FileUtilsTests.swift",
@@ -3617,7 +3738,7 @@
       "-I",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/Modules",
       "-target",
-      "arm64-apple-macosx11.0",
+      "arm64-apple-macosx12.0",
       "-enable-batch-mode",
       "-index-store-path",
       "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/index/store",
@@ -4642,10 +4763,6 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/ContentView.swift"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/BatchSettings.swift"
         },
         {
@@ -4658,7 +4775,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/LivePhotoPair.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaItem.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/MediaMetadata.swift"
         },
         {
           "kind" : "file",
@@ -4671,10 +4796,6 @@
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Models/User.swift"
-        },
-        {
-          "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/PhotoMigratorApp.swift"
         },
         {
           "kind" : "file",
@@ -4770,7 +4891,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/Logger.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/MemoryMonitor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/SystemCompatibility.swift"
         },
         {
           "kind" : "file",
@@ -4819,6 +4948,10 @@
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/OnboardingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/PhotoMigratorApp.swift"
         },
         {
           "kind" : "file",
@@ -5196,10 +5329,6 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ContentView.swift.o"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/DateTimeUtils.swift.o"
         },
         {
@@ -5244,6 +5373,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoPair.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoProcessor.swift.o"
         },
         {
@@ -5256,11 +5389,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/Logger.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MachineIdentifier.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaItem.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaMetadata.swift.o"
         },
         {
           "kind" : "file",
@@ -5309,6 +5450,10 @@
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SummaryView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.swift.o"
         },
         {
           "kind" : "file",
@@ -5876,10 +6021,6 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ContentView.swift.o"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/DateTimeUtils.swift.o"
         },
         {
@@ -5924,6 +6065,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoPair.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/LivePhotoProcessor.swift.o"
         },
         {
@@ -5936,11 +6081,19 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/Logger.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MachineIdentifier.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaItem.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MediaMetadata.swift.o"
         },
         {
           "kind" : "file",
@@ -5992,6 +6145,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/User.swift.o"
         },
         {
@@ -6008,11 +6165,23 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/AlbumRecreationIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessingIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ArchiveProcessorTests.swift.o"
         },
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSettingsTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/BatchSizeAdvisorTests.swift.o"
         },
         {
           "kind" : "file",
@@ -6032,7 +6201,15 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoManagerTests.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoProcessorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/LivePhotoReconstructionIntegrationTests.swift.o"
         },
         {
           "kind" : "file",
@@ -6057,6 +6234,18 @@
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/ModelsTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/PhotosImportIntegrationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/PhotosImporterTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigratorTests.build/UserPreferencesTests.swift.o"
         },
         {
           "kind" : "file",
@@ -6266,6 +6455,22 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/AlbumRecreationIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/ArchiveProcessingIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/LivePhotoReconstructionIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/IntegrationTests/PhotosImportIntegrationTests.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/LicenseTests.swift"
         },
         {
@@ -6286,11 +6491,27 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/BatchSizeAdvisorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoManagerTests.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/LivePhotoProcessorTests.swift"
         },
         {
           "kind" : "file",
           "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/MetadataExtractorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/PhotosImporterTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Tests/PhotoMigratorTests/ServicesTests/UserPreferencesTests.swift"
         },
         {
           "kind" : "file",

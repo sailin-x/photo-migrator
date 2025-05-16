@@ -40,28 +40,6 @@ enum LicenseError: Error {
     }
 }
 
-struct License: Codable {
-    let id: String
-    let userId: String
-    let key: String
-    let type: LicenseType
-    let activationsCount: Int
-    let maxActivations: Int
-    let createdAt: Date
-    let expiresAt: Date?
-    
-    var isExpired: Bool {
-        if let expiryDate = expiresAt {
-            return Date() > expiryDate
-        }
-        return false
-    }
-    
-    var hasRemainingActivations: Bool {
-        return activationsCount < maxActivations
-    }
-}
-
 struct MachineInfo: Codable {
     let id: String
     let name: String
@@ -126,7 +104,7 @@ class LicenseService: ObservableObject {
                 licenseType = license.type.rawValue
                 expirationDate = license.expiresAt
                 
-                remainingActivations = license.maxActivations - license.activationsCount
+                remainingActivations = license.activationsRemaining
                 canUseApp = true
             } else {
                 // License has expired
@@ -176,13 +154,16 @@ class LicenseService: ObservableObject {
             // Create a mock license
             let license = License(
                 id: UUID().uuidString,
+                licenseKey: licenseKey,
                 userId: "user123",
-                key: licenseKey,
                 type: .perpetual,
-                activationsCount: 1,
+                purchasedAt: Date(),
+                expiresAt: nil,
+                isActive: true,
+                activationsUsed: 1,
                 maxActivations: 2,
-                createdAt: Date(),
-                expiresAt: nil
+                paymentId: nil,
+                orderNumber: nil
             )
             
             // Store the license locally
@@ -197,7 +178,7 @@ class LicenseService: ObservableObject {
                 self.hasValidLicense = true
                 self.licenseType = license.type.rawValue
                 self.expirationDate = license.expiresAt
-                self.remainingActivations = license.maxActivations - license.activationsCount
+                self.remainingActivations = license.activationsRemaining
                 self.canUseApp = true
             }
         } else {
@@ -296,7 +277,7 @@ class LicenseService: ObservableObject {
     
     var activationsString: String {
         if let license = currentLicense {
-            return "\(license.activationsCount)/\(license.maxActivations)"
+            return "\(license.activationsUsed)/\(license.maxActivations)"
         }
         return "0/0"
     }

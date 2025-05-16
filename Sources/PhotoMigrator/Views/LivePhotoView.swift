@@ -32,7 +32,10 @@ struct LivePhotoView: View {
         .sheet(isPresented: $showingDirectoryPicker) {
             DirectoryPickerView(selectedURL: $selectedDirectory, onSelect: { url in
                 selectedDirectory = url
-                scanDirectory(url)
+                // Fix: Wrap async call properly
+                Task { 
+                    await scanDirectory(url)
+                }
             })
         }
         .sheet(isPresented: $showingDetail) {

@@ -150,15 +150,14 @@ struct SummaryView: View {
                             .bold()
                     }
                     
-                    if let successRate = summary.successRate {
-                        HStack {
-                            Text("Success rate:")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(String(format: "%.1f%%", successRate))
-                                .bold()
-                                .foregroundColor(successRate > 90 ? .green : (successRate > 70 ? .orange : .red))
-                        }
+                    // Show success rate (not optional)
+                    HStack {
+                        Text("Success rate:")
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text(String(format: "%.1f%%", summary.successRate))
+                            .bold()
+                            .foregroundColor(summary.successRate > 90 ? .green : (summary.successRate > 70 ? .orange : .red))
                     }
                 }
             }
@@ -189,18 +188,19 @@ struct SummaryView: View {
                         .cornerRadius(8)
                 }
                 
-                if let logPath = summary.logPath {
-                    Button(action: {
-                        isShowingLogFile = true
-                    }) {
-                        Text("View Log")
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(Color.gray.opacity(0.2))
-                            .foregroundColor(.primary)
-                            .cornerRadius(8)
-                    }
+                // Show log button if logPath exists
+                Button(action: {
+                    isShowingLogFile = true
+                }) {
+                    Text("View Log")
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.primary)
+                        .cornerRadius(8)
                 }
+                .opacity(summary.logPath != nil ? 1.0 : 0.0)
+                .disabled(summary.logPath == nil)
             }
             
             // Preferences button
@@ -218,8 +218,12 @@ struct SummaryView: View {
         .padding()
         .frame(maxWidth: 600)
         .sheet(isPresented: $isShowingLogFile) {
+            // Only show log viewer if we have a valid log path
             if let logPath = summary.logPath {
                 LogViewer(logURL: logPath)
+            } else {
+                Text("No log file available")
+                    .padding()
             }
         }
         .sheet(isPresented: $isShowingDetailedStats) {

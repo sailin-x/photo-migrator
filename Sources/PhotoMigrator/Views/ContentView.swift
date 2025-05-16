@@ -147,8 +147,12 @@ struct ImportPhotosView: View {
                 Button("Start Migration") {
                     startMigration()
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(takeoutArchivePath.isEmpty || isProcessing)
+                // Use buttonStyle that's available on macOS 11
+.buttonStyle(.bordered)
+.foregroundColor(.white)
+.background(Color.blue)
+.cornerRadius(5)
+.disabled(takeoutArchivePath.isEmpty || isProcessing)
             }
             .padding()
             .background(Color.secondary.opacity(0.2))

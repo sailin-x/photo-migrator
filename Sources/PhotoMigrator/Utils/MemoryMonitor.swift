@@ -1,4 +1,10 @@
 import Foundation
+import SwiftUI
+
+// Memory pressure notification compatibility
+extension NSNotification.Name {
+    static let memoryPressureStatusDidChange = NSNotification.Name(rawValue: "NSProcessInfoMemoryPressureStatusDidChange")
+}
 
 /// Utility for monitoring application memory usage
 class MemoryMonitor {
@@ -55,10 +61,12 @@ class MemoryMonitor {
     
     private init() {
         // Register for memory pressure notifications from the system
+        // Use our compatibility utilities
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(didReceiveMemoryWarning),
-            name: NSNotification.Name.NSProcessInfoMemoryPressureStatusDidChange,
+            name: .memoryPressureStatusDidChange,
             object: nil
         )
     }

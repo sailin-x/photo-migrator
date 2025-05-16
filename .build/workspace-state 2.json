@@ -1,0 +1,234 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "alamofire",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/Alamofire/Alamofire.git",
+          "name" : "Alamofire"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+            "version" : "5.10.2"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "Alamofire"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "functions-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/supabase-community/functions-swift",
+          "name" : "functions-swift"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "d2fac1980cf5b589077b635d4e18249f7939a9db",
+            "version" : "1.1.1"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "functions-swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "get",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/kean/Get",
+          "name" : "Get"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
+            "version" : "2.2.1"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "Get"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "getextensions",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/binaryscraping/GetExtensions",
+          "name" : "GetExtensions"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "aa20f38721142eb6592b2c8f11179d32d7d70ae3",
+            "version" : "1.0.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "GetExtensions"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "gotrue-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/supabase-community/gotrue-swift",
+          "name" : "GoTrue"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "e53731e21569b2e9ce6f58763ad0fbce8e2e7603",
+            "version" : "1.3.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "gotrue-swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "jwtdecode.swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/auth0/JWTDecode.swift.git",
+          "name" : "JWTDecode"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "36a5ce735a61c4bc119593f43ce2c027b4ca7392",
+            "version" : "3.3.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "JWTDecode.swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "keychainaccess",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+          "name" : "KeychainAccess"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
+            "version" : "4.2.2"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "KeychainAccess"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "postgrest-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/supabase-community/postgrest-swift",
+          "name" : "PostgREST"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "2afb40a2f91ba881db8f04131e1b5146001813a5",
+            "version" : "1.0.3"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "postgrest-swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "realtime-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/supabase-community/realtime-swift.git",
+          "name" : "Realtime"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "0b985c687fe963f6bd818ff77a35c27247b98bb4",
+            "version" : "0.0.2"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "realtime-swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "storage-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/supabase-community/storage-swift.git",
+          "name" : "SupabaseStorage"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "65cae9e1156711043cbdebb27b4df93cbef46a1b",
+            "version" : "0.1.4"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "storage-swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "supabase-swift",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/supabase-community/supabase-swift.git",
+          "name" : "Supabase"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "7088b85247c8e56317f0b22b9d60655e8f762fec",
+            "version" : "0.3.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "supabase-swift"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swiftyjson",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
+          "name" : "SwiftyJSON"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "af76cf3ef710b6ca5f8c05f3a31307d44a3c5828",
+            "version" : "5.0.2"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "SwiftyJSON"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "urlqueryencoder",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/kean/URLQueryEncoder",
+          "name" : "URLQueryEncoder"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "4ce950479707ea109f229d7230ec074a133b15d7",
+            "version" : "0.2.1"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "URLQueryEncoder"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

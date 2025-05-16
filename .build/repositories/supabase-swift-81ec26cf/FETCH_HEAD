@@ -1,10 +1,9 @@
-31197721e76fb99daab7328b46a1c2bc7f86883b	not-for-merge	branch 'docs/spi' of https://github.com/supabase-community/supabase-swift
 b3c852051df3eb808c6e805a79f95967993e6270	not-for-merge	branch 'feat/auth-admin' of https://github.com/supabase-community/supabase-swift
 8c4dc93818fe36bfedff484e78909bc4f70affc4	not-for-merge	branch 'fix/push-mainactor' of https://github.com/supabase-community/supabase-swift
 0f2d85bd69a073770cdba77cc78a3a51cbeb57b7	not-for-merge	branch 'guilherme/dont-send-non-jwts-in-authorization' of https://github.com/supabase-community/supabase-swift
 b21c4883215373870f8e8d1f5cffcc2e71ce75cd	not-for-merge	branch 'guilherme/fix/functions-set-auth' of https://github.com/supabase-community/supabase-swift
 734e6df0aa895ecf36bd8a820fbbc84de816b759	not-for-merge	branch 'macos-keychain-error' of https://github.com/supabase-community/supabase-swift
-8dd95493cd18c07a13fd1f7c6759c0fa04734e77	not-for-merge	branch 'main' of https://github.com/supabase-community/supabase-swift
+3e292c510e55117455800ee2d9e8c8f0c7db3896	not-for-merge	branch 'main' of https://github.com/supabase-community/supabase-swift
 b1b6b9d327a3aeddf94290c2f3e9c8284b38b751	not-for-merge	branch 'postgrest-cache' of https://github.com/supabase-community/supabase-swift
 f84ae8703f99548e66152ed4e7d93e8b37f9c633	not-for-merge	branch 'resumable-upload' of https://github.com/supabase-community/supabase-swift
 7434e08ec62e1c3b220a50695489ddedff68ed87	not-for-merge	branch 'sample-supadrive' of https://github.com/supabase-community/supabase-swift
@@ -472,7 +471,6 @@ fa54259e5e6b6d3411d376188bbe264b5aded7e2	not-for-merge	'refs/pull/712/head' of h
 b3c852051df3eb808c6e805a79f95967993e6270	not-for-merge	'refs/pull/715/head' of https://github.com/supabase-community/supabase-swift
 aefa07051e7c5347bcf005f16709419a34efd4ca	not-for-merge	'refs/pull/715/merge' of https://github.com/supabase-community/supabase-swift
 31197721e76fb99daab7328b46a1c2bc7f86883b	not-for-merge	'refs/pull/716/head' of https://github.com/supabase-community/supabase-swift
-da9ddcd8fafc47fd2fdb89d376cee31f398ab0c9	not-for-merge	'refs/pull/716/merge' of https://github.com/supabase-community/supabase-swift
 04b704f33c4a8eda067b4b4cfd27bc5f070e3f19	not-for-merge	'refs/pull/72/head' of https://github.com/supabase-community/supabase-swift
 f5b6cf1de5607ac746f217bf3de228467ed29949	not-for-merge	'refs/pull/79/head' of https://github.com/supabase-community/supabase-swift
 c3f7df67518634e04b8facf9f0d17de9aae6e451	not-for-merge	'refs/pull/8/head' of https://github.com/supabase-community/supabase-swift
