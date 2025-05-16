@@ -1,7 +1,7 @@
 import Foundation
 import Photos
 import CoreLocation
-import MobileCoreServices
+import CoreServices
 
 /// Represents the progress of a media import operation
 struct ImportProgress {
@@ -443,20 +443,25 @@ class PhotosImporter {
     ///   - item: The MediaItem containing metadata
     private func applyMetadata(to request: PHAssetCreationRequest?, from item: MediaItem) {
         // Set creation date
-        if let creationDate = item.timestamp {
-            request?.creationDate = creationDate
-        }
+        request?.creationDate = item.timestamp
         
-        // Set location
+        // Set location if available
         if let latitude = item.latitude, let longitude = item.longitude {
-            let location = CLLocation(latitude: latitude, longitude: longitude)
-            request?.location = location
+            request?.location = CLLocation(
+                latitude: latitude,
+                longitude: longitude
+            )
         }
         
         // Handle favorite status
         if item.isFavorite, let placeholder = request?.placeholderForCreatedAsset {
-            let changeRequest = PHAssetChangeRequest(for: placeholder)
-            changeRequest.isFavorite = true
+            // Handle favorites in a different way since PHAssetChangeRequest cannot be used with a placeholder
+            Task {
+                try? await PHPhotoLibrary.shared().performChanges {
+                    let request = PHAssetChangeRequest(for: PHAsset.fetchAssets(withLocalIdentifiers: [placeholder.localIdentifier], options: nil).firstObject!)
+                    request.isFavorite = true
+                }
+            }
         }
         
         // Apply title and description in the content editing output
