@@ -9,6 +9,7 @@ class MigrationProgress: ObservableObject {
         case initializing
         case extractingArchive
         case processingMetadata
+        case processingLivePhotos
         case importingPhotos
         case organizingAlbums
         case complete
@@ -20,6 +21,21 @@ class MigrationProgress: ObservableObject {
         case info
         case warning
         case error
+        
+        /// Create an information message
+        static func info(_ message: String) -> ProgressMessage {
+            return ProgressMessage(message: message, type: .info)
+        }
+        
+        /// Create a warning message
+        static func warning(_ message: String) -> ProgressMessage {
+            return ProgressMessage(message: message, type: .warning)
+        }
+        
+        /// Create an error message
+        static func error(_ message: String) -> ProgressMessage {
+            return ProgressMessage(message: message, type: .error)
+        }
     }
     
     /// A message with a type (info, warning, error)
@@ -47,6 +63,24 @@ class MigrationProgress: ObservableObject {
     
     /// Most recent progress message
     @Published var currentMessage: String = ""
+    
+    /// Name of the current item being processed
+    @Published var currentItemName: String = ""
+    
+    /// Number of photos processed
+    @Published var photosProcessed: Int = 0
+    
+    /// Number of videos processed
+    @Published var videosProcessed: Int = 0
+    
+    /// Number of Live Photos reconstructed successfully
+    @Published var livePhotosReconstructed: Int = 0
+    
+    /// Number of items that failed to process
+    @Published var failedItems: Int = 0
+    
+    /// Number of albums created
+    @Published var albumsCreated: Int = 0
     
     /// Recent progress or error messages
     @Published var recentMessages: [ProgressMessage] = []
@@ -97,6 +131,12 @@ class MigrationProgress: ObservableObject {
         totalItems = 0
         processedItems = 0
         currentMessage = ""
+        currentItemName = ""
+        photosProcessed = 0
+        videosProcessed = 0
+        livePhotosReconstructed = 0
+        failedItems = 0
+        albumsCreated = 0
         recentMessages = []
         elapsedTime = 0
         isCancelled = false

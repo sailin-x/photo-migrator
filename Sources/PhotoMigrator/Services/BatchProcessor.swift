@@ -129,9 +129,21 @@ class BatchProcessor {
         let orderedItems = applyOrderStrategy(items)
         
         // If grouping is enabled, process groups independently
-        if settings.groupItemsByType, let groupableItems = orderedItems as? [GroupableItem] {
+        if settings.groupItemsByType, let groupableItems = orderedItems as? [any GroupableItem] {
             logMessage("Processing items in groups by type")
-            let groupedResults = try await processGroupedItems(groupableItems, processFunction: processFunction)
+            
+            // Process items grouped by type with concrete implementation
+            // to avoid generic type issues
+            let groupedResults = try await processGroupedItemsAny(
+                groupableItems, 
+                processFunction: { batch in
+                    // Convert back to original type for processing
+                    guard let batchAsT = batch as? [T] else {
+                        throw BatchProcessingError.typeMismatch
+                    }
+                    return try await processFunction(batchAsT)
+                }
+            )
             return groupedResults
         }
         
@@ -291,14 +303,14 @@ class BatchProcessor {
         return results
     }
     
-    /// Process items grouped by type
+    /// Process items grouped by type with a type-erased approach
     /// - Parameters:
-    ///   - items: The items to process, which should conform to GroupableItem
+    ///   - items: The items to process
     ///   - processFunction: The function to process each batch
     /// - Returns: The collected results from all batches
-    private func processGroupedItems<T: GroupableItem, R>(
-        _ items: [T],
-        processFunction: ([T]) async throws -> [R]
+    private func processGroupedItemsAny<R>(
+        _ items: [any GroupableItem],
+        processFunction: ([any GroupableItem]) async throws -> [R]
     ) async throws -> [R] {
         // Group items by their type
         let groupedItems = Dictionary(grouping: items) { $0.groupType }
@@ -324,18 +336,80 @@ class BatchProcessor {
             )
             
             // Process this group in batches
-            let groupResults = try await processBatches(items: itemsInGroup, processFunction: processFunction)
+            let groupResults = try await processBatchesAny(items: itemsInGroup, processFunction: processFunction)
             results.append(contentsOf: groupResults)
-            
-            // Publish stage completion
-            BatchProgressPublisher.shared.publishStageProgress(
-                stageName: "Processing \(groupType)",
-                progress: 1.0
-            )
             
             // Allow memory cleanup between groups
             memoryMonitor.reduceMemoryUsage()
             try await Task.sleep(nanoseconds: UInt64(settings.pauseBetweenBatches * 1_000_000_000))
+        }
+        
+        return results
+    }
+    
+    /// Process batches with type-erased items
+    /// - Parameters:
+    ///   - items: The items to process
+    ///   - processFunction: The function to process each batch
+    /// - Returns: The collected results from all batches
+    private func processBatchesAny<R>(
+        items: [any GroupableItem],
+        processFunction: ([any GroupableItem]) async throws -> [R]
+    ) async throws -> [R] {
+        var results: [R] = []
+        let currentBatchSize = settings.batchSize
+        
+        // Set up batch parameters
+        let totalBatchesInGroup = (items.count + currentBatchSize - 1) / currentBatchSize
+        
+        // Process in batches
+        for batchStart in stride(from: 0, to: items.count, by: currentBatchSize) {
+            if isCancelled {
+                logMessage("Processing cancelled")
+                BatchProgressPublisher.shared.publishBatchCancelled()
+                throw BatchProcessingError.cancelled
+            }
+            
+            // Increment batch counter
+            progress.currentBatch += 1
+            
+            // Get the current batch of items
+            let batchEndIndex = min(batchStart + currentBatchSize, items.count)
+            let batch = Array(items[batchStart..<batchEndIndex])
+            
+            // Log the current batch
+            logMessage("Processing batch \(progress.currentBatch)/\(progress.totalBatches) (\(batchStart)-\(batchEndIndex-1) of \(items.count) items)")
+            
+            // Process the batch
+            do {
+                let batchResults = try await processFunction(batch)
+                results.append(contentsOf: batchResults)
+                
+                // Update progress
+                for (index, _) in batchResults.enumerated() {
+                    let itemIndex = batchStart + index
+                    let itemIdString: String
+                    
+                    if let identifiable = batch[index] as? Identifiable,
+                       let idDescription = String(describing: identifiable.id) as String? {
+                        itemIdString = idDescription
+                    } else {
+                        itemIdString = "item\(itemIndex)"
+                    }
+                    
+                    // Only publish every N items to avoid flooding the system
+                    if itemIndex % 5 == 0 || itemIndex == items.count - 1 {
+                        BatchProgressPublisher.shared.publishItemProcessed(
+                            index: itemIndex + 1,
+                            total: items.count,
+                            itemId: itemIdString
+                        )
+                    }
+                }
+            } catch {
+                logMessage("Error processing batch \(progress.currentBatch): \(error.localizedDescription)")
+                throw error
+            }
         }
         
         return results
@@ -507,6 +581,7 @@ enum BatchProcessingError: Error {
     case cancelled
     case memoryPressure
     case timeout
+    case typeMismatch
 }
 
 /// Protocol for items that have a timestamp

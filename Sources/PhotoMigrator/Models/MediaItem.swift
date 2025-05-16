@@ -71,6 +71,11 @@ struct MediaItem {
     
     /// Original JSON data for debugging and verification
     var originalJsonData: [String: Any]?
+    
+    /// The original filename of the media item (derived from the fileURL)
+    var originalFileName: String {
+        return fileURL.lastPathComponent
+    }
 }
 
 /// Detailed category stats for media types

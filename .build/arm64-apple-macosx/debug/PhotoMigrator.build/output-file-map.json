@@ -206,12 +206,6 @@
     "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MemoryMonitor~partial.swiftmodule",
     "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/MemoryMonitor.swiftdeps"
   },
-  "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Utils/SystemCompatibility.swift": {
-    "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.d",
-    "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.swift.o",
-    "swiftmodule": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility~partial.swiftmodule",
-    "swift-dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/SystemCompatibility.swiftdeps"
-  },
   "/Users/sailin/Documents/Developer Projects/PhotoMigrator/Sources/PhotoMigrator/Views/ArchiveSelectionView.swift": {
     "dependencies": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ArchiveSelectionView.d",
     "object": "/Users/sailin/Documents/Developer Projects/PhotoMigrator/.build/arm64-apple-macosx/debug/PhotoMigrator.build/ArchiveSelectionView.swift.o",

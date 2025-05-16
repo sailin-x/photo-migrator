@@ -14,10 +14,10 @@ class ArchiveProcessor {
     private var logFileHandle: FileHandle?
     
     /// Photos importing service
-    private let photosImporter = PhotosImporter()
+    internal let photosImporter = PhotosImporter()
     
     /// Flag for cancellation
-    private var isCancelled = false
+    internal var isCancelled = false
     
     /// Batch processing settings
     private var batchSettings = BatchSettings()
@@ -25,11 +25,20 @@ class ArchiveProcessor {
     /// Whether batch processing is enabled
     private var batchProcessingEnabled = true
     
-    /// In the class declaration, add LivePhotoBuilder
-    private let logger = Logger.shared
-    private let livePhotoProcessor = LivePhotoProcessor()
-    private let livePhotoBuilder = LivePhotoBuilder()
-    private let livePhotoManager = LivePhotoManager()
+    /// Logger for application events
+    internal let logger = Logger.shared
+    
+    /// Processor for finding and matching Live Photo components
+    internal let livePhotoProcessor = LivePhotoProcessor()
+    
+    /// Builder for creating Live Photos from components
+    internal let livePhotoBuilder = LivePhotoBuilder()
+    
+    /// Manager for creating and tracking Live Photos
+    internal let livePhotoManager = LivePhotoManager()
+    
+    /// Album creation and organization manager
+    internal let albumManager = AlbumManager()
     
     /// Initialize with progress tracking
     init(progress: MigrationProgress) {
@@ -468,7 +477,7 @@ class ArchiveProcessor {
             if isCancelled { throw CancellationError() }
             
             // Simulate importing to Photos (in real implementation, this would use PhotoKit)
-            let success = Bool.random(in: 0...9) != 0 // 90% success rate
+            let success = Int.random(in: 0...9) != 0 // 90% success rate
             let assetId = success ? "asset_\(UUID().uuidString)" : nil
             let result = PhotosImportResult(mediaItem: item, assetId: assetId)
             results.append(result)
@@ -579,7 +588,7 @@ class ArchiveProcessor {
         writeToLog("Scanning directory: \(directory.path)")
         
         return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.global(qos: .userInitiated).async {
+            let workItem = DispatchWorkItem {
                 var mediaItems: [MediaItem] = []
                 var mediaFiles: [URL] = []
                 var jsonFiles: [URL] = []
@@ -738,6 +747,8 @@ class ArchiveProcessor {
                 self.writeToLog("Processed \(mediaItems.count) media items, including \(potentialLivePhotoPairs) potential Live Photo pairs")
                 continuation.resume(returning: mediaItems)
             }
+            
+            DispatchQueue.global(qos: .userInitiated).async(execute: workItem)
         }
     }
     

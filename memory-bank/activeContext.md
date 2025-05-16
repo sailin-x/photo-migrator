@@ -2,58 +2,134 @@
 
 ## Current Focus
 
-We are currently working on improving the test suite for the PhotoMigrator application (Task 13). We have just completed Task 13.9 which involved fixing build issues in the test suite.
+We are currently working on completing compatibility fixes for the PhotoMigrator application and implementing comprehensive test coverage. Our immediate focus is addressing build errors related to SwiftUI and macOS compatibility, as well as completing the test suite for core components.
 
 ### Completed:
 
-- Fixed XCTestManifests.swift by adding missing test class references for ArchiveProcessorTests and LivePhotoProcessorTests
-- Identified underlying project structure issues causing "multiple producers" build errors
-- Created documentation explaining the project structure problems (PROJECT_STRUCTURE.md)
-- Developed a reorganization script (scripts/reorganize_project.sh) to help fix the structure
-- Documented test suite fixes in TEST_SUITE_FIXES.md
-- Updated Package.swift to temporarily work around duplicate files
+- Reorganized all source files to follow the proper Swift Package Manager structure:
+  - Moved source files to Sources/PhotoMigrator directory
+  - Moved test files to Tests/PhotoMigratorTests directory
+  - Eliminated duplicate file definitions from Package.swift
+- Fixed build issues:
+  - Eliminated duplicate struct definitions (License, User)
+  - Fixed circular imports between modules
+  - Fixed Boolean.random usage with Int.random alternatives
+  - Fixed async function calls in view components
+  - Fixed Dispatch.DispatchQueue.async method calls
+- Implemented comprehensive MemoryMonitor class:
+  - Added missing methods: getMemoryUsagePercentage, reduceMemoryUsage, configureThresholds, recommendedBatchSize
+  - Improved memory pressure tracking with proper callback mechanisms
+  - Added support for changing batch sizes based on memory pressure
+  - Created comprehensive test suite for MemoryMonitor class
+- Fixed batch processing with type-erased approach for GroupableItem protocol
+
+### In Progress:
+
+- Fixing incompatible SwiftUI modifiers for macOS:
+  - Chart API (.chartTitle) usage is incompatible
+  - TextField modifiers like .keyboardType and .autocapitalization
+  - TabViewStyle.page is unavailable in macOS
+- Addressing file system API compatibility issues:
+  - File dropping implementation with onDrop
+  - UTType implementation for macOS
+- Completing test suites for core components:
+  - MediaItem tests
+  - MigrationProgress tests
+  - PhotosImporter tests
+  - MetadataExtractor tests
 
 ### Next Steps:
 
-- Complete unit tests for models and utilities (Task 13.2)
-- Implement remaining unit tests for services
-- Add integration tests for key workflows
-- Set up UI tests for critical user journeys
+1. Fix the most critical UI compatibility issues:
+   - Chart API usage
+   - File dropping implementation
+   - TextField modifiers
+2. Address exhaustive switch statements in ErrorView and ProgressView to handle all MigrationError cases
+3. Implement complete test coverage for core functionality
+4. Run a complete build with all tests to ensure everything passes
+
+## Implementation Notes
+
+### MemoryMonitor Improvements
+
+The MemoryMonitor class has been extensively enhanced to provide better memory management capabilities:
+
+- Added configurable memory pressure thresholds (mediumPressure, highPressure, criticalPressure)
+- Implemented proper callbacks for both memory warnings and pressure level changes
+- Added methods to calculate memory usage percentage and format memory sizes
+- Created a batch size advisor that can recommend optimal batch sizes based on current memory pressure
+- Replaced the outdated objc_collectingTryCollect with autoreleasepool for memory cleanup
+- Added reset functionality for peak memory usage tracking
+
+### Testing Strategy
+
+We are implementing a comprehensive testing strategy for the core components:
+
+1. **Unit Tests**: Testing individual classes and functions in isolation
+2. **Integration Tests**: Testing how components work together
+3. **Mocking**: Using mock implementations for system services like PhotoKit
+4. **Error Handling**: Ensuring proper error handling and recovery
+
+All tests are designed to be repeatable and not modify the user's actual Photos library or file system.
+
+## Environment Configuration
+
+- **Minimum macOS Version**: 12.0 (specified in Package.swift)
+- **Swift Version**: 5.5+
+- **Build System**: Swift Package Manager
+- **Dependencies**: SwiftUI, PhotoKit, UniformTypeIdentifiers
+
+## Testing Requirements
+
+- Tests should not require user interaction
+- Tests should not modify the actual Photos library
+- Tests should clean up any temporary files created
+- All tests should be idempotent (can be run multiple times with the same result)
+- Test coverage should focus on core functionality first
 
 ## Project Organization
 
-The PhotoMigrator project structure currently has issues with duplicate Swift files in different locations:
-- Files in `PhotoMigrator/` directory
-- Duplicate files in `PhotoMigrator/Sources/PhotoMigrator/` directory
+The PhotoMigrator project structure has been reorganized to follow standard Swift Package Manager conventions:
+- All source files are now in `Sources/PhotoMigrator/` directory
+- All test files are now in `Tests/PhotoMigratorTests/` directory
+- Package.swift has been updated to correctly reference the files
+- Duplicate files have been removed
 
-This is causing build failures with "multiple producers" errors. A full reorganization to a standard Swift Package Manager structure is recommended, but in the meantime we're focusing on completing the test suite implementation.
+This has resolved the "multiple producers" build errors. The focus now is on completing compatibility fixes to ensure the application works correctly across macOS versions.
 
 ## Work Queue
 
 Tasks in order of priority:
 
-1. Complete unit tests for models and utilities (Task 13.2)
-2. Implement remaining unit tests for services
-3. Improve edge case handling
-4. Enhance user experience
-5. Implement additional privacy and security enhancements
-6. Develop comprehensive user documentation
+1. Complete compatibility fixes for macOS 12+ (Task 13.4)
+2. Finish unit tests for models and utilities
+3. Implement remaining unit tests for services
+4. Add integration tests for key workflows
+5. Set up UI tests for critical user journeys
+6. Improve edge case handling
+7. Enhance user experience
+8. Develop comprehensive user documentation
 
 ## Project Status
 
 - Core functionality (Tasks 1-10): Complete
-- Test suite (Task 13): In progress
-- UI/UX enhancements (Task 16): Pending
-- Documentation (Task 14): Pending
-- Edge case handling (Task 15): Pending
-- Privacy and security (Task 17): Pending
+- Project structure reorganization (Task 13.3): Complete
+- macOS compatibility fixes (Task 13.4): In progress
+- Test suite (Task 16): In progress 
+- UI/UX enhancements (Task 19): Pending
+- Documentation (Task 17): Pending
+- Edge case handling (Task 18): Pending
+- Privacy and security (Task 20): Pending
 
 ## Recent Changes
 
-- Added missing test class references to XCTestManifests.swift
-- Created documentation for project structure issues
-- Developed a reorganization script to help fix the structure
-- Documented test suite fixes
+- Completed project reorganization to follow Swift Package Manager conventions
+- Fixed build errors caused by duplicate struct definitions
+- Fixed circular import issues
+- Addressed compatibility issues for different macOS versions
+- Implemented fixes for async function calls in view components
+- Updated Package.swift to properly reference files and dependencies
+- Updated minimum macOS version to 12.0
 
 ## Key Dependencies
 
@@ -65,18 +141,10 @@ Tasks in order of priority:
 - JWTDecode for authentication
 
 ## Additional Information
-- Reviewing the completed PhotoMigrator application
-- Planning the remaining work needed to finalize the application
-- Prioritizing the new tasks for comprehensive testing, documentation, and polish
-- Conducted a comprehensive code review of the application
+- Reviewing the compatibility issues across different macOS versions
+- Planning remaining compatibility fixes needed
+- Prioritizing test coverage for critical components
 - Updated task statuses to reflect completed work
-- Added new tasks for remaining necessary work:
-  - User Documentation (Task 17)
-  - Edge Case Handling Improvements (Task 18)
-  - User Experience Refinements (Task 19)
-  - Additional Privacy and Security Enhancements (Task 20)
-- Updated progress tracking in memory-bank
-- Begin work on Task 16 (Comprehensive Test Suite Development) as a high priority
 - Continue user testing and feedback integration (Task 11)
 - Work on performance optimization (Task 12)
 - Plan for security and privacy enhancements (Task 20)
