@@ -32,41 +32,17 @@ class PhotosImporter {
     // For internal cancellation tracking
     private var isCancelled = false
     
+    // Permissions manager
+    private let permissionsManager = PermissionsManager.shared
+    
     /// Request permission to access the user's photo library
     /// - Returns: A boolean indicating whether access was granted, and an optional error
     func requestPhotoLibraryPermission() async -> (granted: Bool, error: Error?) {
-        // First check the current authorization status
-        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        
-        // Return immediately if already authorized
-        if status == .authorized {
-            return (true, nil)
-        }
-        
-        // Return immediately if already denied or restricted - can't prompt again programmatically
-        if status == .denied || status == .restricted {
-            return (false, MigrationError.photosAccessDenied)
-        }
-        
-        // For not determined or limited, request authorization
-        return await withCheckedContinuation { continuation in
-            PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
-                switch newStatus {
-                case .authorized:
-                    continuation.resume(returning: (true, nil))
-                case .limited:
-                    // Limited access is still usable, but we should indicate this to the user
-                    continuation.resume(returning: (true, nil))
-                case .denied, .restricted:
-                    continuation.resume(returning: (false, MigrationError.photosAccessDenied))
-                case .notDetermined:
-                    // This shouldn't happen after requesting authorization
-                    continuation.resume(returning: (false, MigrationError.unknown))
-                @unknown default:
-                    continuation.resume(returning: (false, MigrationError.unknown))
-                }
-            }
-        }
+        // Use the centralized permissions manager
+        return await permissionsManager.requestPhotoLibraryPermissionAsync(
+            level: .readWrite,
+            explanation: "PhotoMigrator needs access to your Photos library to import your Google Photos and preserve their metadata and organization."
+        )
     }
     
     /// Cancel any in-progress import operations

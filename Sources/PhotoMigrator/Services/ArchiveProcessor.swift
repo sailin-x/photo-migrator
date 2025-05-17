@@ -28,6 +28,9 @@ class ArchiveProcessor {
     /// Logger for application events
     internal let logger = Logger.shared
     
+    /// Secure file manager for safe file operations
+    internal let fileManager = SecureFileManager.shared
+    
     /// Processor for finding and matching Live Photo components
     internal let livePhotoProcessor = LivePhotoProcessor()
     
@@ -65,22 +68,29 @@ class ArchiveProcessor {
     /// Set up log file
     private func setupLogFile() {
         do {
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd_HHmm"
             let dateString = dateFormatter.string(from: Date())
             
-            logFileURL = documentsDirectory.appendingPathComponent("PhotoMigrator_\(dateString).log")
+            logFileURL = try fileManager.createSecureFileURL(
+                filename: "PhotoMigrator_\(dateString).log",
+                in: fileManager.getLogsDirectory()
+            )
             
             if let url = logFileURL {
-                if FileManager.default.fileExists(atPath: url.path) {
-                    try FileManager.default.removeItem(at: url)
+                // If file exists, securely remove it first
+                if try fileManager.fileExists(at: url) {
+                    try fileManager.removeItem(at: url)
                 }
-                FileManager.default.createFile(atPath: url.path, contents: nil)
+                
+                // Create an empty data and write it to initialize the file
+                try fileManager.writeFile(data: Data(), to: url)
+                
+                // Open file handle for writing
                 logFileHandle = try FileHandle(forWritingTo: url)
             }
         } catch {
-            print("Failed to set up log file: \(error)")
+            logger.log("Failed to set up secure log file: \(error.localizedDescription)", type: .error)
         }
     }
     
@@ -102,6 +112,26 @@ class ArchiveProcessor {
     /// Clean up resources
     deinit {
         try? logFileHandle?.close()
+    }
+    
+    /// Validate that an archive path is secure and valid
+    /// - Parameter path: The path to the archive
+    /// - Throws: FileSecurityError if the path is invalid or insecure
+    func validateArchivePath(_ path: String) throws {
+        // Check if the path is secure (no traversal attempts)
+        _ = try fileManager.sanitizePath(path)
+        
+        // Convert to URL and check if it exists
+        let url = URL(fileURLWithPath: path)
+        guard try fileManager.fileExists(at: url) else {
+            throw FileSecurityError.invalidPath(path: path, reason: "Archive file does not exist")
+        }
+        
+        // Check if it has a valid extension
+        let validExtensions = ["zip", "tar", "gz", "tgz"]
+        if !validExtensions.contains(url.pathExtension.lowercased()) {
+            throw FileSecurityError.invalidPath(path: path, reason: "Archive has invalid extension")
+        }
     }
     
     func processArchive(at archiveURL: URL) async throws -> MigrationSummary {

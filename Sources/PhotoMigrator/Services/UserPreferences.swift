@@ -1,6 +1,13 @@
 import Foundation
 import Combine
 
+/// Privacy level for metadata handling
+enum PrivacyLevel: String, Codable {
+    case standard // Basic protection - respects individual toggle settings
+    case enhanced // Higher protection - strips more metadata beyond toggle settings
+    case maximum  // Maximum protection - strips all potentially sensitive metadata
+}
+
 /// Service that manages and persists user preferences
 class UserPreferences: ObservableObject {
     /// Shared singleton instance
@@ -87,6 +94,58 @@ class UserPreferences: ObservableObject {
         }
     }
     
+    // MARK: - Privacy Preferences
+    
+    /// Privacy level for metadata handling
+    @Published var privacyLevel: PrivacyLevel = .standard {
+        didSet {
+            savePreferences()
+        }
+    }
+    
+    /// Whether to completely strip GPS data regardless of preserveLocationData setting
+    @Published var stripGPSData: Bool = false {
+        didSet {
+            savePreferences()
+        }
+    }
+    
+    /// Whether to obfuscate location data by reducing precision instead of removing completely
+    @Published var obfuscateLocationData: Bool = false {
+        didSet {
+            savePreferences()
+        }
+    }
+    
+    /// Precision level for obfuscated GPS data (in decimal places: 0-6)
+    /// 0: ~111km, 1: ~11km, 2: ~1.1km, 3: ~110m, 4: ~11m, 5: ~1.1m, 6: ~0.11m
+    @Published var locationPrecisionLevel: Int = 2 {
+        didSet {
+            savePreferences()
+        }
+    }
+    
+    /// Whether to strip personal identifiers from metadata
+    @Published var stripPersonalIdentifiers: Bool = false {
+        didSet {
+            savePreferences()
+        }
+    }
+    
+    /// Whether to strip device information (camera make/model)
+    @Published var stripDeviceInfo: Bool = false {
+        didSet {
+            savePreferences()
+        }
+    }
+    
+    /// Whether to log sensitive metadata (disabled for security)
+    @Published var logSensitiveMetadata: Bool = false {
+        didSet {
+            savePreferences()
+        }
+    }
+    
     // MARK: - UI Preferences
     
     /// Whether to show detailed statistics view after migration
@@ -145,6 +204,15 @@ class UserPreferences: ObservableObject {
         defaults.set(importLivePhotos, forKey: "importLivePhotos")
         defaults.set(createAlbums, forKey: "createAlbums")
         
+        // Privacy preferences
+        defaults.set(privacyLevel.rawValue, forKey: "privacyLevel")
+        defaults.set(stripGPSData, forKey: "stripGPSData")
+        defaults.set(obfuscateLocationData, forKey: "obfuscateLocationData")
+        defaults.set(locationPrecisionLevel, forKey: "locationPrecisionLevel")
+        defaults.set(stripPersonalIdentifiers, forKey: "stripPersonalIdentifiers")
+        defaults.set(stripDeviceInfo, forKey: "stripDeviceInfo")
+        defaults.set(logSensitiveMetadata, forKey: "logSensitiveMetadata")
+        
         // UI preferences
         defaults.set(showDetailedStatsOnCompletion, forKey: "showDetailedStatsOnCompletion")
         defaults.set(autoExportReport, forKey: "autoExportReport")
@@ -190,6 +258,21 @@ class UserPreferences: ObservableObject {
         importVideos = defaults.object(forKey: "importVideos") as? Bool ?? true
         importLivePhotos = defaults.object(forKey: "importLivePhotos") as? Bool ?? true
         createAlbums = defaults.object(forKey: "createAlbums") as? Bool ?? true
+        
+        // Privacy preferences
+        if let privacyLevelString = defaults.string(forKey: "privacyLevel"),
+           let level = PrivacyLevel(rawValue: privacyLevelString) {
+            privacyLevel = level
+        } else {
+            privacyLevel = .standard
+        }
+        
+        stripGPSData = defaults.object(forKey: "stripGPSData") as? Bool ?? false
+        obfuscateLocationData = defaults.object(forKey: "obfuscateLocationData") as? Bool ?? false
+        locationPrecisionLevel = defaults.object(forKey: "locationPrecisionLevel") as? Int ?? 2
+        stripPersonalIdentifiers = defaults.object(forKey: "stripPersonalIdentifiers") as? Bool ?? false
+        stripDeviceInfo = defaults.object(forKey: "stripDeviceInfo") as? Bool ?? false
+        logSensitiveMetadata = defaults.object(forKey: "logSensitiveMetadata") as? Bool ?? false
         
         // UI preferences
         showDetailedStatsOnCompletion = defaults.object(forKey: "showDetailedStatsOnCompletion") as? Bool ?? true
@@ -239,6 +322,15 @@ class UserPreferences: ObservableObject {
         importVideos = true
         importLivePhotos = true
         createAlbums = true
+        
+        // Privacy preferences
+        privacyLevel = .standard
+        stripGPSData = false
+        obfuscateLocationData = false
+        locationPrecisionLevel = 2
+        stripPersonalIdentifiers = false
+        stripDeviceInfo = false
+        logSensitiveMetadata = false
         
         // UI preferences
         showDetailedStatsOnCompletion = true

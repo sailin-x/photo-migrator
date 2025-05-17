@@ -72,6 +72,107 @@ struct PreferencesView: View {
                     .padding()
                 }
                 
+                // Privacy Settings
+                GroupBox(label: Text("Privacy Settings").font(.headline)) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Privacy Protection Level")
+                            .fontWeight(.medium)
+                        
+                        Picker("Privacy Level", selection: $preferences.privacyLevel) {
+                            Text("Standard").tag(PrivacyLevel.standard)
+                            Text("Enhanced").tag(PrivacyLevel.enhanced)
+                            Text("Maximum").tag(PrivacyLevel.maximum)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding(.bottom, 5)
+                        
+                        Group {
+                            switch preferences.privacyLevel {
+                            case .standard:
+                                Text("Standard privacy protects your data based on the settings below.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            case .enhanced:
+                                Text("Enhanced privacy automatically applies stronger protection beyond basic settings.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            case .maximum:
+                                Text("Maximum privacy strips most metadata to ensure maximum protection.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.bottom, 5)
+                        
+                        Divider()
+                            .padding(.vertical, 5)
+                        
+                        Text("Location Privacy")
+                            .fontWeight(.medium)
+                        
+                        Toggle("Strip GPS Data Completely", isOn: $preferences.stripGPSData)
+                            .disabled(preferences.privacyLevel == .maximum)
+                        
+                        if !preferences.stripGPSData && preferences.privacyLevel != .maximum {
+                            Toggle("Obfuscate Location (Reduce Precision)", isOn: $preferences.obfuscateLocationData)
+                                .padding(.leading)
+                                .disabled(!preferences.preserveLocationData)
+                            
+                            if preferences.obfuscateLocationData && preferences.preserveLocationData {
+                                Text("Location Precision Level: \(preferences.locationPrecisionLevel)")
+                                    .padding(.leading)
+                                
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(preferences.locationPrecisionLevel) },
+                                        set: { preferences.locationPrecisionLevel = Int($0) }
+                                    ),
+                                    in: 0...6,
+                                    step: 1
+                                )
+                                .padding(.leading)
+                                
+                                Text("Lower values provide better privacy (0: ~111km, 3: ~110m, 6: ~0.11m)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .padding(.leading)
+                            }
+                        }
+                        
+                        Divider()
+                            .padding(.vertical, 5)
+                        
+                        Text("Other Privacy Settings")
+                            .fontWeight(.medium)
+                        
+                        Toggle("Strip Personal Identifiers", isOn: $preferences.stripPersonalIdentifiers)
+                            .disabled(preferences.privacyLevel == .maximum)
+                        
+                        Toggle("Strip Device Information", isOn: $preferences.stripDeviceInfo)
+                            .disabled(preferences.privacyLevel == .maximum)
+                        
+                        Divider()
+                            .padding(.vertical, 5)
+                        
+                        Text("Logging & Debugging")
+                            .fontWeight(.medium)
+                        
+                        Toggle("Allow Logging Sensitive Metadata", isOn: $preferences.logSensitiveMetadata)
+                            .disabled(preferences.privacyLevel == .maximum)
+                        
+                        if preferences.logSensitiveMetadata && preferences.privacyLevel != .maximum {
+                            Text("Warning: Enabling this option may record sensitive information in logs")
+                                .font(.caption)
+                                .foregroundColor(.red)
+                                .padding(.leading)
+                        }
+                    }
+                    .padding()
+                }
+                
+                // Permissions Settings
+                PermissionsPreferenceView()
+                
                 // UI Settings
                 GroupBox(label: Text("User Interface").font(.headline)) {
                     VStack(alignment: .leading, spacing: 12) {
@@ -87,68 +188,22 @@ struct PreferencesView: View {
                     Button("Reset to Defaults") {
                         showResetConfirmation = true
                     }
-                    .foregroundColor(.red)
-                    Spacer()
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .padding()
                 }
-                .padding(.top, 10)
-                
-                // Migration History
-                if !preferences.recentMigrations.isEmpty {
-                    GroupBox(label: Text("Recent Migrations").font(.headline)) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            ForEach(Array(preferences.recentMigrations.enumerated()), id: \.offset) { index, summary in
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text("Migration \(index + 1)")
-                                            .fontWeight(.medium)
-                                        Text("\(summary.totalItemsProcessed) items, \(summary.successfulImports) successful")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Text(formatSuccessRate(summary.successRate))
-                                        .foregroundColor(getSuccessRateColor(summary.successRate))
-                                }
-                                .padding(.vertical, 5)
-                                
-                                if index < preferences.recentMigrations.count - 1 {
-                                    Divider()
-                                }
-                            }
-                        }
-                        .padding()
-                    }
+                .alert(isPresented: $showResetConfirmation) {
+                    Alert(
+                        title: Text("Reset Preferences"),
+                        message: Text("Are you sure you want to reset all preferences to their default values?"),
+                        primaryButton: .destructive(Text("Reset")) {
+                            preferences.resetToDefaults()
+                        },
+                        secondaryButton: .cancel()
+                    )
                 }
             }
             .padding()
-        }
-        .alert(isPresented: $showResetConfirmation) {
-            Alert(
-                title: Text("Reset Preferences"),
-                message: Text("Are you sure you want to reset all preferences to their default values?"),
-                primaryButton: .destructive(Text("Reset")) {
-                    preferences.resetToDefaults()
-                },
-                secondaryButton: .cancel()
-            )
-        }
-    }
-    
-    // Helper function to format success rate percentage
-    private func formatSuccessRate(_ rate: Double) -> String {
-        return String(format: "%.1f%%", rate)
-    }
-    
-    // Helper function to get color based on success rate
-    private func getSuccessRateColor(_ rate: Double) -> Color {
-        if rate >= 90 {
-            return .green
-        } else if rate >= 75 {
-            return .orange
-        } else {
-            return .red
         }
     }
 }

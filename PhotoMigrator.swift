@@ -1,4 +1,5 @@
 import Foundation
+import class Foundation.Bundle
 
 // Enhanced command line interface with all features
 print("PhotoMigrator - Google Photos to Apple Photos Migration Tool")
@@ -45,3 +46,18 @@ print("- Subscription handling")
 print("- Onboarding for new users")
 print("")
 print("For a complete feature list, see the attached documentation.")
+
+extension Bundle {
+    // This extension adds programmatic access to the required usage descriptions
+    // that would normally be in Info.plist
+    
+    /// Photo library usage description
+    static var photoLibraryUsageDescription: String {
+        return "PhotoMigrator requires access to your Photos library to import your Google Photos, preserving metadata like dates, locations, and descriptions. The app will also recreate your album structure."
+    }
+    
+    /// Photo library add usage description
+    static var photoLibraryAddUsageDescription: String {
+        return "PhotoMigrator needs permission to add photos to your Photos library. This is required to import your Google Photos."
+    }
+}

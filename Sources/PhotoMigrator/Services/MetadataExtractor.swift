@@ -5,6 +5,8 @@ import CoreImage
 
 class MetadataExtractor {
     private let dateFormatter = ISO8601DateFormatter()
+    private let privacyManager = MetadataPrivacyManager.shared
+    private let logger = Logger.shared
     
     init() {
         dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -85,7 +87,13 @@ class MetadataExtractor {
                 }
             }
             
-            return metadata
+            // Apply privacy settings to sanitize metadata before returning
+            let sanitizedMetadata = privacyManager.sanitizeMetadata(metadata)
+            
+            // Log metadata if allowed by privacy settings
+            privacyManager.safelyLogMetadata(sanitizedMetadata, label: "Extracted metadata from JSON")
+            
+            return sanitizedMetadata
         } catch {
             throw MigrationError.metadataParsingError(details: "Error reading JSON file: \(error.localizedDescription)")
         }
@@ -101,6 +109,10 @@ class MetadataExtractor {
         guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String: Any] else {
             return metadata
         }
+        
+        // Store the raw EXIF data for potential forensic/debugging purposes
+        // This will be sanitized by the privacy manager
+        metadata.exifData = properties
         
         // Extract EXIF data
         if let exif = properties[kCGImagePropertyExifDictionary as String] as? [String: Any] {
@@ -170,7 +182,13 @@ class MetadataExtractor {
             metadata.height = height
         }
         
-        return metadata
+        // Apply privacy settings to sanitize metadata before returning
+        let sanitizedMetadata = privacyManager.sanitizeMetadata(metadata)
+        
+        // Log metadata if allowed by privacy settings
+        privacyManager.safelyLogMetadata(sanitizedMetadata, label: "Extracted EXIF metadata")
+        
+        return sanitizedMetadata
     }
     
     // MARK: - Private Methods

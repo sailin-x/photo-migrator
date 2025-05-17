@@ -1,146 +1,178 @@
 import Foundation
 import os.log
 
-/// Logging levels used by the application
-enum LogLevel: Int {
-    case debug = 0
-    case info = 1
-    case warning = 2
-    case error = 3
-    
-    var description: String {
-        switch self {
-        case .debug: return "DEBUG"
-        case .info: return "INFO"
-        case .warning: return "WARNING"
-        case .error: return "ERROR"
-        }
-    }
-    
-    var osLogType: OSLogType {
-        switch self {
-        case .debug: return .debug
-        case .info: return .info
-        case .warning: return .default
-        case .error: return .error
-        }
-    }
-}
-
-/// Application-wide logging service
+/// A secure logging system that respects privacy settings
 class Logger {
     /// Shared singleton instance
     static let shared = Logger()
     
-    /// OS Log instance for system logging
-    private let osLog = OSLog(subsystem: "com.photomigrator", category: "Application")
+    /// System logger for secure logging
+    private let osLog = OSLog(subsystem: "com.photomigrator.app", category: "Migration")
     
-    /// Current minimum log level (defaults to info)
-    var minimumLogLevel: LogLevel = .debug
+    /// File URL for log file
+    private var logFileURL: URL?
     
-    /// File URL for the log file if file logging is enabled
-    private(set) var logFileURL: URL?
+    /// Preferences reference
+    private let preferences = UserPreferences.shared
     
-    /// File handle for writing to log file
-    private var logFileHandle: FileHandle?
-    
-    /// Date formatter for log entries
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-        return formatter
-    }()
+    /// Secure file manager
+    private let secureFileManager = SecureFileManager.shared
     
     /// Private initializer for singleton
     private init() {
-        // Initialize log file if needed
         setupLogFile()
     }
     
-    /// Sets up the log file in the application support directory
+    /// Set up log file in app's secure logs directory
     private func setupLogFile() {
         do {
-            let fileManager = FileManager.default
-            let appSupportDir = try fileManager.url(for: .applicationSupportDirectory, 
-                                                  in: .userDomainMask, 
-                                                  appropriateFor: nil, 
-                                                  create: true)
-                .appendingPathComponent("PhotoMigrator", isDirectory: true)
+            // Get the logs directory from secure file manager
+            let logsDirectoryURL = secureFileManager.getLogsDirectory()
             
-            // Create directory if it doesn't exist
-            if !fileManager.fileExists(atPath: appSupportDir.path) {
-                try fileManager.createDirectory(at: appSupportDir, 
-                                              withIntermediateDirectories: true)
-            }
+            // Create log file with timestamp
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+            let timestamp = dateFormatter.string(from: Date())
             
-            // Create log file
-            let timestamp = ISO8601DateFormatter().string(from: Date())
-            logFileURL = appSupportDir.appendingPathComponent("photomigrator_\(timestamp).log")
+            // Create secure file URL
+            logFileURL = try secureFileManager.createSecureFileURL(
+                filename: "photomigrator_\(timestamp).log",
+                in: logsDirectoryURL
+            )
             
-            if let logFileURL = logFileURL {
-                if !fileManager.fileExists(atPath: logFileURL.path) {
-                    fileManager.createFile(atPath: logFileURL.path, contents: nil)
-                }
-                
-                logFileHandle = try FileHandle(forWritingTo: logFileURL)
-            }
+            // Write initial log header
+            let header = "PhotoMigrator Log - Started at \(timestamp)\n" +
+                        "----------------------------------------\n"
+            try secureFileManager.writeFile(
+                data: Data(header.utf8),
+                to: logFileURL!
+            )
+            
+            log("Logging system initialized")
         } catch {
-            // If logging setup fails, just print to console
-            print("Failed to set up log file: \(error.localizedDescription)")
+            // If we can't create a log file, just use system logging
+            os_log("Failed to create secure log file: %{public}@", log: osLog, type: .error, error.localizedDescription)
         }
     }
     
-    /// Log a message with the specified log level
+    /// Log a message
     /// - Parameters:
     ///   - message: The message to log
-    ///   - level: Log level (defaults to .info)
-    func log(_ message: String, level: LogLevel = .info) {
-        // Log to system log
-        os_log("%{public}@", log: osLog, type: level.osLogType, message)
+    ///   - type: Log type (default: .info)
+    ///   - privacy: Whether to treat the message as sensitive (default: false)
+    func log(_ message: String, type: OSLogType = .info, privacy: Bool = false) {
+        let timestamp = getCurrentTimestamp()
+        let logMessage = "[\(timestamp)] \(message)"
         
-        // Print to console if level meets threshold
-        if level.rawValue >= minimumLogLevel.rawValue {
-            let timestamp = dateFormatter.string(from: Date())
-            print("[\(timestamp)] [\(level.description)] \(message)")
+        // Check if this is sensitive information and respect privacy settings
+        if privacy && !preferences.logSensitiveMetadata {
+            // Log a sanitized message instead
+            let sanitizedMessage = "[\(timestamp)] [REDACTED_SENSITIVE_INFO]"
+            writeToLogFile(sanitizedMessage, type: type)
+            os_log("[REDACTED_SENSITIVE_INFO]", log: osLog, type: type)
+            return
         }
+        
+        // Log to file
+        writeToLogFile(logMessage, type: type)
+        
+        // Log to system
+        os_log("%{public}@", log: osLog, type: type, message)
     }
     
-    /// Close the log file
-    func closeLogFile() {
-        logFileHandle?.closeFile()
-        logFileHandle = nil
+    /// Log sensitive information with privacy controls
+    /// - Parameters:
+    ///   - message: The sensitive message to log
+    ///   - type: Log type (default: .info)
+    func logSensitive(_ message: String, type: OSLogType = .info) {
+        // Always consider this sensitive
+        log(message, type: type, privacy: true)
     }
     
-    /// Get the contents of the log file
-    /// - Returns: String contents of the log file or nil if not available
-    func getLogContents() -> String? {
-        guard let logFileURL = logFileURL else { return nil }
+    /// Get the current timestamp for logging
+    /// - Returns: Formatted timestamp string
+    private func getCurrentTimestamp() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        return dateFormatter.string(from: Date())
+    }
+    
+    /// Write a message to the log file
+    /// - Parameters:
+    ///   - message: The message to write
+    ///   - type: Log type
+    private func writeToLogFile(_ message: String, type: OSLogType) {
+        guard let logFileURL = logFileURL else { return }
         
         do {
-            return try String(contentsOf: logFileURL, encoding: .utf8)
+            // Format with log level
+            var levelString: String
+            switch type {
+            case .error:
+                levelString = "ERROR"
+            case .fault:
+                levelString = "FAULT"
+            case .debug:
+                levelString = "DEBUG"
+            case .info:
+                levelString = "INFO"
+            default:
+                levelString = "TRACE"
+            }
+            
+            let formattedMessage = "\(message) [\(levelString)]\n"
+            
+            // Read existing log data
+            var logData: Data
+            do {
+                logData = try secureFileManager.readFile(at: logFileURL)
+            } catch {
+                // If file doesn't exist yet, start with empty data
+                logData = Data()
+            }
+            
+            // Append new log message
+            if let messageData = formattedMessage.data(using: .utf8) {
+                logData.append(messageData)
+            }
+            
+            // Write updated log data
+            try secureFileManager.writeFile(data: logData, to: logFileURL)
         } catch {
-            log("Failed to read log file: \(error.localizedDescription)", level: .error)
-            return nil
+            // Just use system logging if file operations fail
+            os_log("Failed to write to log file: %{public}@", log: osLog, type: .error, error.localizedDescription)
         }
     }
     
-    /// Log a debug message
-    func debug(_ message: String) {
-        log(message, level: .debug)
+    /// Get the path to the current log file
+    /// - Returns: URL of the log file, or nil if not available
+    func getLogFilePath() -> URL? {
+        return logFileURL
     }
     
-    /// Log an info message
-    func info(_ message: String) {
-        log(message, level: .info)
+    /// Securely clear all logs
+    func clearLogs() {
+        guard let logFileURL = logFileURL else { return }
+        
+        do {
+            // Securely overwrite the file before deleting
+            let secureData = Data(repeating: 0, count: 1024 * 1024) // 1MB of zeros
+            try secureFileManager.writeFile(data: secureData, to: logFileURL)
+            
+            // Delete the file
+            try secureFileManager.removeItem(at: logFileURL)
+            
+            // Create a new log file
+            setupLogFile()
+        } catch {
+            os_log("Failed to clear logs: %{public}@", log: osLog, type: .error, error.localizedDescription)
+        }
     }
     
-    /// Log a warning message
-    func warning(_ message: String) {
-        log(message, level: .warning)
-    }
-    
-    /// Log an error message
-    func error(_ message: String) {
-        log(message, level: .error)
+    /// Log file system security warnings
+    /// - Parameter warning: The security warning message
+    func logSecurityWarning(_ warning: String) {
+        log("⚠️ SECURITY WARNING: \(warning)", type: .error)
+        os_log("SECURITY WARNING: %{public}@", log: osLog, type: .fault, warning)
     }
 } 

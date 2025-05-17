@@ -32,7 +32,8 @@ let package = Package(
                 .product(name: "JWTDecode", package: "JWTDecode.swift"),
             ],
             resources: [
-                .process("Resources")
+                .process("Resources/PrivacyPolicy.swift"),
+                .process("Resources/TermsAndConditions.swift")
             ]
         ),
         .testTarget(
